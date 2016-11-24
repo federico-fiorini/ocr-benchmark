@@ -2,8 +2,14 @@ import requests
 from app import app
 import json
 
+"""
+Set this flag to True if only frontend functionality is needed.
+Set this flag to False if backend service is also needed.
+"""
+TESTING_FRONTEND = True;
 
 class BackEndService:
+
 
     TOKEN_SCHEME = "Bearer"
     LOGIN_ENDPOINT = '/login'
@@ -33,12 +39,16 @@ class BackEndService:
         return self.address.rstrip('/') + endpoint
 
     def login(self, username, password):
+        
         """
         Calls LOGIN endpoint to authenticate the user
         :param username:
         :param password:
         :return:
         """
+        if TESTING_FRONTEND:
+            return True
+       
         body = {
             "username": username,
             "password": password
