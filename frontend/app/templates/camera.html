@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <title>Remote Apps</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+
+  </head>
+
+  <body>
+    <div class="container">
+
+      <form name="loginForm" class="form-signin" action="" method="POST" >
+        <h2 class="form-signin-heading">The camera</h2>
+        
+  
+        <button type="button" class="btn btn-default">Take a picture</button>
+        <button type="button" class="btn btn-default">Optical character recognition</button>
+        <button type="button" class="btn btn-default">⬅ Back to dashboard</button>
+      </form>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
