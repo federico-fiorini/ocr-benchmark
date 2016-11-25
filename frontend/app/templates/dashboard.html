@@ -37,8 +37,10 @@
         <div class="col-xs-6">  
                 <a class="btn btn-primary btn-block" href="/camera" role="button">Scan</a>
         </div>   
-        <div class="col-xs-6">  
-            <a class="btn btn-primary btn-block" href="/ocr" role="button">Select file(s)</a>
+        <div class="col-xs-6">   
+            <label class="btn btn-primary btn-block" role="button">
+                Select file(s) <input type="file" style="display: none;" onchange="window.location = 'ocr'">
+            </label>
         </div>
         <h3 class="form-signin-heading">History</h3>
       </form>
