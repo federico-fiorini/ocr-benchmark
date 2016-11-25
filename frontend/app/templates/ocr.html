@@ -9,34 +9,33 @@
     <meta name="author" content="">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-    <title>Remote Apps</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    
+
+	<!-- Javascript -->
+	<script src="{{url_for('static', filename='js/functions.js')}}"></script>
+
+    <title>OCR</title>
 
   </head>
 
-  <body>
+  <body onload="initORC()">
+
+    <div class="loader"></div>
     <div class="container">
-
-      <form name="loginForm" class="form-signin" action="" method="POST" >
-        <h2 class="form-signin-heading">The camera</h2>
-        
-  
-        <button type="button" class="btn btn-default">Take a picture</button>
-        <div class="col-xs-12">  
-            <a class="btn btn-primary btn-block" href="/ocr" role="button">Optical character recognition</a>
+   
+      <div class="col-md-4 offset-sm-4  text-xs-center">
+        <div id="hidden_form_container" style="display:none;"></div>
+        <div class="control-group">
+            &nbsp;
         </div>
-        <div class="col-xs-12">  
-            <a class="btn btn-primary btn-block" href="/dashboard" role="button">⬅ Back to dashboard</a>
-        </div>  
-      </form>
-
-    </div> <!-- /container -->
+        <div class="control-group">
+        </div>
+      </div>
+		
+    </div>
 
   </body>
 </html>

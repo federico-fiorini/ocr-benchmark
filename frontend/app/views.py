@@ -21,7 +21,7 @@ def login():
     
     # If logged in already: redirect to dashboard page
     if 'logged_in' in session and session['logged_in'] == True:
-        return redirect(url_for('TODO'))  # TODO: redirect to main page
+        return redirect(url_for('dashboard')) 
 
     # If POST: check login
     if request.method == 'POST':
@@ -41,18 +41,64 @@ def login():
             return render_template('login.html', error="Service not available, try again later", salt=SALT)
         # Otherwise: redirect to dashboard page
         session['logged_in'] = True
-        return redirect(url_for('dashboard'))  # TODO: redirect to main page
+        return redirect(url_for('dashboard'))
 
     # If GET
     return render_template('login.html', error=None, salt=SALT)
 
 
-@app.route("/dashboard", methods=['GET'])  # TODO: render main dashboard page
-def TODO():
+@app.route("/dashboard", methods=['GET'])  # TODO: add functions 
+def dashboard():
 
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
 
     return render_template('dashboard.html')
+    pass
+
+
+
+@app.route("/camera", methods=['GET'])  # TODO: add functions 
+def camera():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+
+    return render_template('camera.html')
+    pass
+
+
+
+@app.route("/ocr", methods=['GET'])  # TODO: add functions 
+def ocr():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+
+    return render_template('ocr.html')
+    pass
+
+
+
+@app.route("/result", methods=['GET'])  # TODO: add functions 
+def result():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+
+    return render_template('result.html')
+    pass
+
+@app.route("/benchmark", methods=['GET'])  # TODO: add functions 
+def benchmark():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+
+    return render_template('benchmark.html')
     pass

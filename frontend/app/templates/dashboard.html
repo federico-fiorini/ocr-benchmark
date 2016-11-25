@@ -28,17 +28,18 @@
         
         <select class="selectpicker btn-block" data-style="btn-info">
             <option>Local</option>
-            <option>Remote</option> 
+            <option disabled>Remote</option> 
+            <option disabled>Benchmark</option> 
         </select>
         
     
  
-<div class="col-xs-6">  
-        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="return false">Scan</button>
-</div>   
-<div class="col-xs-6">  
-        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="return false">Select file</button>
-</div>      
+        <div class="col-xs-6">  
+                <a class="btn btn-primary btn-block" href="/camera" role="button">Scan</a>
+        </div>   
+        <div class="col-xs-6">  
+            <a class="btn btn-primary btn-block" href="/ocr" role="button">Select file(s)</a>
+        </div>
         <h3 class="form-signin-heading">History</h3>
       </form>
 
