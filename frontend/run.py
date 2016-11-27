@@ -13,4 +13,4 @@ if __name__ == "__main__":
     context = ('certificate.crt', 'private.key')
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(debug=True, port=port, ssl_context=context)
+    app.run(debug=True, host='0.0.0.0', port=port, ssl_context=context)

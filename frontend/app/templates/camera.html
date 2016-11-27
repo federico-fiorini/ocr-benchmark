@@ -16,21 +16,25 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    
+	
 
   </head>
 
   <body>
     <div class="container">
 
-      <form name="loginForm" class="form-signin" action="" method="POST" >
-        <h2 class="form-signin-heading">The camera</h2>
+      <form name="loginForm" class="cam-form-signin" action="{{ url_for('ocr') }}" method="POST" enctype="multipart/form-data">
+        <!--h2 class="form-signin-heading">The camera</h2-->
         
-        <div id="preview" style=" height:30vh;  width:30vh ;border-style: solid; "> 
+        <div id="preview" style=" height:60vh;  width:50vh ;border-style: solid; "> 
+			<img src="about:blank" alt="" id="preview-pic">
         </div>
-        <button type="button" class="btn btn-default">Take a picture</button>
+        <!--button type="button" class="btn btn-default">Take a picture</button-->
+		<input type="file" name="cam_pic" id="cam_pic" class="cam_pic_class" accept="image/*" capture="camera" value="Take a picture"/>
+		<label for="cam_pic" type="button" class="btn btn-default">Take a picture</label>
         <div class="col-xs-12">  
-            <a class="btn btn-primary btn-block" href="/ocr" role="button">Optical character recognition</a>
+            <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
+			<input type="submit" value="Optical character recognition" class="btn btn-primary btn-block">
         </div>
         <div class="col-xs-12">  
             <a class="btn btn-primary btn-block" href="/dashboard" role="button">⬅ Back to dashboard</a>
@@ -38,6 +42,8 @@
       </form>
 
     </div> <!-- /container -->
-
+	
+	<!-- Javascript -->
+	<script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
   </body>
 </html>

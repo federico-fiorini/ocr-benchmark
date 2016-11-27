@@ -1,12 +1,20 @@
 from app import app
 from external import BackEndService
 from flask import request, session, redirect, url_for, render_template
+from werkzeug import secure_filename
 import requests
 import os
 import time
 
 SALT = "fV3Q26FcTz2DsHFf"
 
+# This is the path to the upload directory
+#app.config['UPLOAD_FOLDER'] = url_for('static', filename='uploads/')
+
+# For a given file, return whether it's an allowed type or not
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 @app.before_request
 def before_request():
@@ -71,26 +79,41 @@ def camera():
 
 
 
-@app.route("/ocr", methods=['GET'])  # TODO: add functions 
+@app.route("/ocr", methods=['GET', 'POST'])  # TODO: add functions 
 def ocr():
 
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
 
-    return render_template('ocr.html')
+    # Get the name of the uploaded file
+    file = request.files['cam_pic']
+    # Check if the file is one of the allowed types/extensions
+    if file and allowed_file(file.filename):
+        # Make the filename safe, remove unsupported chars
+        filename = secure_filename(file.filename)
+        # Move the file form the temporal folder to
+        # the upload folder we setup
+        filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
+        file.save(filepath)
+        # Redirect the user to the uploaded_file route, which
+        # will basicaly show on the browser the uploaded file
+        return render_template('ocr.html', file=filename)
+		
+    return render_template('ocr.html', file=file)
     pass
 
 
 
-@app.route("/result", methods=['GET'])  # TODO: add functions 
+@app.route("/result", methods=['GET', 'POST'])  # TODO: add functions 
 def result():
 
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
-
-    return render_template('result.html')
+	
+    result = request.form['ocr_result']
+    return render_template('result.html', result=result)
     pass
 
 @app.route("/benchmark", methods=['GET'])  # TODO: add functions 
