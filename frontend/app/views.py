@@ -87,20 +87,23 @@ def ocr():
         return redirect(url_for('login'))
 
     # Get the name of the uploaded file
-    file = request.files['cam_pic']
-    # Check if the file is one of the allowed types/extensions
-    if file and allowed_file(file.filename):
-        # Make the filename safe, remove unsupported chars
-        filename = secure_filename(file.filename)
-        # Move the file form the temporal folder to
-        # the upload folder we setup
-        filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
-        file.save(filepath)
-        # Redirect the user to the uploaded_file route, which
-        # will basicaly show on the browser the uploaded file
-        return render_template('ocr.html', file=filename)
+    files = request.files.getlist('pics[]')
+    filenames = []
+	
+    for file in files:
+        # Check if the file is one of the allowed types/extensions
+        if file and allowed_file(file.filename):
+            # Make the filename safe, remove unsupported chars
+            filename = secure_filename(file.filename)
+            # Move the file form the temporal folder to
+            # the upload folder we setup
+            filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
+            file.save(filepath)
+            filenames.append(filename)
+            # Redirect the user to the uploaded_file route, which
+            # will basicaly show on the browser the uploaded file
+    return render_template('ocr.html', files=filenames)
 		
-    return render_template('ocr.html', file=file)
     pass
 
 

@@ -17,7 +17,11 @@
 	<!-- Javascript -->
 	<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 	<script>
-		var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
+		var cam_pic = [];
+		//var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
+		{% for file in files %}
+		cam_pic.push("{{url_for('static', filename='uploads/')}}" + "{{file}}");
+		{% endfor %}
 	</script>
 
     <title>OCR</title>
