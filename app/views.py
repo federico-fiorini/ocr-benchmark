@@ -61,52 +61,17 @@ def dashboard():
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
+    
+    # If POST: handle call
+    if request.method == 'POST':
 
+        filenames = getFiles()
+        #generate result
+        
     return render_template('dashboard.html')
+        
 
 
-
-@app.route("/camera", methods=['GET'])  # TODO: add functions 
-def camera():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-
-    return render_template('camera.html')
-
-
-
-@app.route("/ocr", methods=['GET', 'POST'])  # TODO: add functions 
-def ocr():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-
-    filenames = getFiles()
-    return render_template('ocr.html', files=filenames)
-
-
-
-@app.route("/result", methods=['GET', 'POST'])  # TODO: add functions 
-def result():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-	
-    result = request.form['ocr_result']
-    return render_template('result.html', result=result)
-
-@app.route("/benchmark", methods=['GET'])  # TODO: add functions 
-def benchmark():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-
-    return render_template('benchmark.html')
 
 def getFiles():
     # Get the name of the uploaded file
