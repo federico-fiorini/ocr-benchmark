@@ -10,7 +10,8 @@ except IndexError:
 
 
 if __name__ == "__main__":
-    context = ('certificate.crt', 'private.key')
+    context = ('credentials/certificate.crt', 'credentials/private.key')
     app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True, host='0.0.0.0', port=port, ssl_context=context)

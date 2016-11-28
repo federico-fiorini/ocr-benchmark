@@ -8,9 +8,8 @@ apt-get install git build-essential python python-dev python-pip libffi-dev libs
 pip install --upgrade pip virtualenv
 
 # Create virtual environments
-virtualenv frontend/.env
-frontend/.env/bin/pip install -r frontend/requirements.txt
+virtualenv .env
+.env/bin/pip install -r requirements.txt
 
-# Run frontend
-cd frontend
+# Run
 ./run.py
