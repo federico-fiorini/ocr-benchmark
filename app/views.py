@@ -64,8 +64,13 @@ def dashboard():
     
     # If POST: handle call
     if request.method == 'POST':
-
-        filenames = getFiles()
+       
+        files = request.form.get('files') 
+ 
+        filenames = getFiles(files)
+        
+        response = "text from ocr"
+        return jsonify(response.json())
         #generate result
         
     return render_template('dashboard.html')
@@ -73,9 +78,8 @@ def dashboard():
 
 
 
-def getFiles():
+def getFiles(files):
     # Get the name of the uploaded file
-    files = request.files.getlist('pics[]')
     filenames = []
 	
     for file in files:
