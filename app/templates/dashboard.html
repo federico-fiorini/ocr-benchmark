@@ -167,7 +167,7 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ url_for('dashboard') }}",
-                    data : "files": pictures,
+                    data : {"files": pictures},
                     success: function(results) {
                         if (results.items.length > 0) {
                         $('input').hide();
