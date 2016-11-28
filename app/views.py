@@ -63,7 +63,6 @@ def dashboard():
         return redirect(url_for('login'))
 
     return render_template('dashboard.html')
-    pass
 
 
 
@@ -75,7 +74,6 @@ def camera():
         return redirect(url_for('login'))
 
     return render_template('camera.html')
-    pass
 
 
 
@@ -86,6 +84,31 @@ def ocr():
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
 
+    filenames = getFiles()
+    return render_template('ocr.html', files=filenames)
+
+
+
+@app.route("/result", methods=['GET', 'POST'])  # TODO: add functions 
+def result():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+	
+    result = request.form['ocr_result']
+    return render_template('result.html', result=result)
+
+@app.route("/benchmark", methods=['GET'])  # TODO: add functions 
+def benchmark():
+
+    # Check if logged in
+    if 'logged_in' not in session or session['logged_in'] == False:
+        return redirect(url_for('login'))
+
+    return render_template('benchmark.html')
+
+def getFiles():
     # Get the name of the uploaded file
     files = request.files.getlist('pics[]')
     filenames = []
@@ -102,29 +125,3 @@ def ocr():
             filenames.append(filename)
             # Redirect the user to the uploaded_file route, which
             # will basicaly show on the browser the uploaded file
-    return render_template('ocr.html', files=filenames)
-		
-    pass
-
-
-
-@app.route("/result", methods=['GET', 'POST'])  # TODO: add functions 
-def result():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-	
-    result = request.form['ocr_result']
-    return render_template('result.html', result=result)
-    pass
-
-@app.route("/benchmark", methods=['GET'])  # TODO: add functions 
-def benchmark():
-
-    # Check if logged in
-    if 'logged_in' not in session or session['logged_in'] == False:
-        return redirect(url_for('login'))
-
-    return render_template('benchmark.html')
-    pass
