@@ -1,9 +1,10 @@
-(function () {
+$( document ).ready(function() {
     var takePicture = document.querySelector("#cam_pic"),
         showPicture = document.querySelector("#preview-pic");
     if (takePicture && showPicture) {
         // Set events
         takePicture.onchange = function (event) {
+            console.log("taking picture");
             // Get a reference to the taken picture or chosen file
             var files = event.target.files,
                 file;
@@ -16,7 +17,8 @@
 					showPicture.style.visibility = "visible";
                     // Set img src to ObjectURL
                     showPicture.src = imgURL;
-					console.log(imgURL);
+		
+                    console.log(imgURL);
 
                     // Revoke ObjectURL
                     //URL.revokeObjectURL(imgURL);
@@ -41,4 +43,4 @@
             }
         };
     }
-})();
+});

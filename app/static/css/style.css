@@ -4,6 +4,17 @@ body {
   background-color: #eee;
 }
 
+.show {
+display: block !important;
+}
+.hidden {
+display: none !important;
+visibility: hidden !important;
+}
+.invisible {
+visibility: hidden;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;

@@ -19,27 +19,27 @@
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
-    <style>
-    .show {
-    display: block !important;
-    }
-    .hidden {
-    display: none !important;
-    visibility: hidden !important;
-    }
-    .invisible {
-    visibility: hidden;
-    }
-    </style>
+    <script src="{{url_for('static', filename='js/functions.js')}}"></script>    
+    <script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
+    <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+    <!-- Static constants from server -->
+    <script> 
+        ajaxURL = "{{ url_for('dashboard') }}";
+        //var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
+        {% for file in files %}
+            cam_pic.push("{{url_for('static', filename='uploads/')}}" + "{{file}}");
+        {% endfor %}
+    </script>
+ 
 </head>
 
 <body>
     <div class="container" id="dashboard">
         <h2 class="form-signin-heading">Select something</h2>
         
-        <select class="selectpicker btn-block" data-style="btn-info">
+        <select class="selectpicker btn-block" data-style="btn-info" id="mode">
             <option>Local</option>
-            <option disabled>Remote</option> 
+            <option selected>Remote</option> 
             <option disabled>Benchmark</option> 
         </select>
     
@@ -53,7 +53,7 @@
                     <label class="btn btn-primary btn-block" role="button">   
                         Select file(s)
                         <form id="upload-files" method="post" enctype="multipart/form-data"> 
-                            <input type="file" name="files" id="multiFiles" style="display: none;" onchange="sendMultiFiles('upload-files')" multiple>
+                            <input type="file" name="files" id="multiFiles" style="display: none;" onchange="doOcr('upload-files')" multiple>
                         </form>  
                     </label>
                 </fieldset>                   
@@ -69,7 +69,7 @@
         <!--h2 class="form-signin-heading">The camera</h2-->
         
         <div id="preview" style=" height:60vh;  width:50vh ;border-style: solid; "> 
-                        <img src="about:blank" alt="" id="preview-pic">
+              <img src="" alt="" id="preview-pic">
         </div>
         <!--button type="button" class="btn btn-default">Take a picture</button-->
                 <form id="upload-photos" method="post" enctype="multipart/form-data">  
@@ -78,7 +78,7 @@
                 <label for="cam_pic" type="button" class="btn btn-default">Take a picture</label>
         <div class="col-xs-12">  
             <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
-            <input value="Optical character recognition" class="btn btn-primary btn-block"  onClick="sendMultiFiles('upload-photos')">
+            <input value="Optical character recognition" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')">
         </div>
         <div class="col-xs-12">  
             <button class="btn btn-primary btn-block"   onclick="changeView('dashboard')"  role="button">⬅ Back to dashboard</button>
@@ -90,18 +90,6 @@
     
     <div class="container hidden" id="ocr">
         <div class="loader"></div>
-
-    <div class="col-md-4 offset-sm-4  text-xs-center">
-        <div id="hidden_form_container" style="display:none;"></div>
-        <div class="control-group">
-            &nbsp;
-        </div>
-        <div class="control-group">
-        </div>
-    </div>
-        <form name="ocrForm" id="ocrForm" class="cam-form-signin" action="{{ url_for('dashboard') }}" method="POST">
-                <input type="hidden" name="ocr_result" id="ocr_result" value="">
-        </form>	
     </div>
     
     
@@ -131,61 +119,7 @@
         </div>  
     </div> <!-- /container -->
     
-    
-    <!-- Javascript -->
-        
-    
-    <script src="{{url_for('static', filename='js/functions.js')}}"></script>    
-    <script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
-    <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 
-    <script>
-        var currentView = "dashboard";
-        function changeView(newView){
-            $("#" + currentView).addClass('hidden');
-            $("#" + newView).removeClass('hidden');
-            currentView = newView;
-            
-            switch (newView){
-                case "ocr":
-                    initORC();
-                break;
-            }
-        }
-  
-
-    
-        var cam_pic = [];
-        //var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
-        {% for file in files %}
-        cam_pic.push("{{url_for('static', filename='uploads/')}}" + "{{file}}");
-        {% endfor %}
-
-        function sendMultiFiles(id) {
-                
-            changeView("ocr")
-            var form_data = new FormData($('#'+id)[0]);
-
-            console.log("Sending files", form_data)
-            $.ajax({
-                type: "POST",
-                url: "{{ url_for('dashboard') }}",
-                data: form_data,
-                contentType: false,
-                cache: false,
-                processData: false,
-                async: false,
-                success: function(results) {
-                    $('#result_text').html(results.text);
-                    console.log("Ok", results)
-                    changeView("result")
-                },
-                error: function(error) {
-                    console.log(error)
-                }
-            });
-        }
-    </script>
     
 </body>
 </html>
