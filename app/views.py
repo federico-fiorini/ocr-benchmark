@@ -35,19 +35,25 @@ def login():
     if request.method == 'POST':
 
         username = request.form['inputName']
-        password = request.form['hash']
-        try:       
-            service = BackEndService()
-            correct_login = service.login(username, password)
+        password = request.form['hash'] 
+        if username == "guest" and password == "":
+            session['guest'] = True;
+            print("new quest session")
+        else:
+            session['guest'] = False;
+            print("new session for " + username[:2] + "******")
+            try:       
+                service = BackEndService()
+                correct_login = service.login(username, password)
 
-            # If not logged in: show error
-            if not correct_login:
+                # If not logged in: show error
+                if not correct_login:
+                    session['logged_in'] = False
+                    return render_template('login.html', error="Invalid credentials", salt=SALT)
+            except requests.ConnectionError as e:
                 session['logged_in'] = False
-                return render_template('login.html', error="Invalid credentials", salt=SALT)
-        except requests.ConnectionError as e:
-            session['logged_in'] = False
-            return render_template('login.html', error="Service not available, try again later", salt=SALT)
-        # Otherwise: redirect to dashboard page
+                return render_template('login.html', error="Service not available, try again later", salt=SALT)
+            # Otherwise: redirect to dashboard page
         session['logged_in'] = True
         return redirect(url_for('dashboard'))
 
@@ -61,10 +67,14 @@ def dashboard():
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
+    if 'guest' not in session: #migration from old session
+        session['logged_in'] = False
+        return redirect(url_for('login')) 
      
     # If POST: handle call
     if request.method == 'POST':
-       
+        if session['guest']:
+            return redirect(url_for('login'))
         files = request.files.getlist("files")
  
         print("recieved files: " + str(files))
@@ -79,10 +89,13 @@ def dashboard():
         return jsonify(**response)
         #generate result
         
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', guest=session['guest'])
         
-
-
+@app.route("/logoff", methods=['GET'])  # TODO: add functions 
+def logoff(): 
+     print("session ended")
+     session['logged_in'] = False
+     return redirect(url_for('login'))
 
 def getFiles(files):
     # Get the name of the uploaded file

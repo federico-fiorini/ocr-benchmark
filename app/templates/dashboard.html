@@ -38,8 +38,8 @@
         <h2 class="form-signin-heading">Select something</h2>
         
         <select class="selectpicker btn-block" data-style="btn-info" id="mode">
-            <option>Local</option>
-            <option selected>Remote</option> 
+            <option {% if guest %} selected {% endif %}>Local</option>
+            <option {% if guest %} disabled {% else %} selected {% endif %}>Remote</option> 
             <option disabled>Benchmark</option> 
         </select>
     
@@ -119,7 +119,14 @@
         </div>  
     </div> <!-- /container -->
     
-
-    
+    <div class="container" id="logoff">
+         <div class="row">
+            <div class="col-md-11"></div>
+            <div class="col-md-1 text-right">
+                <a href="{{ url_for('logoff') }}" class="btn-link pull-right" >Log off</a>
+            </div>
+        </div>  
+         
+    </div> 
 </body>
 </html>
