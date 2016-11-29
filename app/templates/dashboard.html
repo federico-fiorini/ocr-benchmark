@@ -35,8 +35,6 @@
 
 <body>
     <div class="container" id="dashboard">
-
-    
         <h2 class="form-signin-heading">Select something</h2>
         
         <select class="selectpicker btn-block" data-style="btn-info">
@@ -44,49 +42,51 @@
             <option disabled>Remote</option> 
             <option disabled>Benchmark</option> 
         </select>
-        
     
 
         <div class="col-xs-6">  
                 <button class="btn btn-primary btn-block"   onClick="changeView('camera')" role="button">Scan</button>
         </div> 
         
-        <form id="upload-file" method="post" enctype="multipart/form-data"> 
             <div class="col-xs-6"> 
                 <fieldset>
                     <label class="btn btn-primary btn-block" role="button">   
                         Select file(s)
-                        <input type="file" name="files" id="multiFiles" style="display: none;" onchange="sendMultiFiles()" multiple>
+                        <form id="upload-files" method="post" enctype="multipart/form-data"> 
+                            <input type="file" name="files" id="multiFiles" style="display: none;" onchange="sendMultiFiles('upload-files')" multiple>
+                        </form>  
                     </label>
                 </fieldset>                   
             </div> 
-        </form>  
         <h3 class="form-signin-heading">History</h3>
-    
-
     </div> <!-- /container -->
+
+    
+    
     
     <div class="container hidden" id="camera">
 
-    
         <!--h2 class="form-signin-heading">The camera</h2-->
         
         <div id="preview" style=" height:60vh;  width:50vh ;border-style: solid; "> 
                         <img src="about:blank" alt="" id="preview-pic">
         </div>
         <!--button type="button" class="btn btn-default">Take a picture</button-->
-                <input type="file" name="pics[]" id="cam_pic" class="cam_pic_class" accept="image/*" capture="camera" value="Take a picture"/>
+                <form id="upload-photos" method="post" enctype="multipart/form-data">  
+                   <input type="file" name="files" id="cam_pic" class="cam_pic_class" accept="image/*" capture="camera" value="Take a picture"/>
+                 </form>  
                 <label for="cam_pic" type="button" class="btn btn-default">Take a picture</label>
         <div class="col-xs-12">  
             <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
-                        <input type="submit" value="Optical character recognition" class="btn btn-primary btn-block">
+            <input value="Optical character recognition" class="btn btn-primary btn-block"  onClick="sendMultiFiles('upload-photos')">
         </div>
         <div class="col-xs-12">  
             <button class="btn btn-primary btn-block"   onclick="changeView('dashboard')"  role="button">⬅ Back to dashboard</button>
         </div>  
-
-
     </div> <!-- /container -->
+    
+
+    
     
     <div class="container hidden" id="ocr">
         <div class="loader"></div>
@@ -103,9 +103,10 @@
                 <input type="hidden" name="ocr_result" id="ocr_result" value="">
         </form>	
     </div>
+    
+    
+    
     <div class="container hidden" id="result">
-
-
         <h2 class="form-signin-heading">The result text</h2>
         <div class="form-group">
             <textarea class="form-control" rows="5" id="result_text"> 
@@ -113,31 +114,28 @@
             </textarea>
         </div>
         
-        
         <button type="button" class="btn btn-default">Save</button>
         <div class="col-xs-12">  
             <button class="btn btn-primary btn-block" onclick="changeView('dashboard')"  role="button">⬅ Back to dashboard</button>
         </div>  
-    
-
     </div> <!-- /container -->
-    
+ 
+ 
+ 
+ 
     <div class="container hidden" id="benchmark">
-
-    
-        <h2 class="form-signin-heading">The results of the benchmark</h2>
+      <h2 class="form-signin-heading">The results of the benchmark</h2>
         
         <div class="col-xs-12">  
             <button class="btn btn-primary btn-block"  onclick="changeView('dashboard')" role="button">⬅ Back to dashboard</button>
         </div>  
-
-
     </div> <!-- /container -->
     
     
-        <!-- Javascript -->
+    <!-- Javascript -->
         
-        
+    
+    <script src="{{url_for('static', filename='js/functions.js')}}"></script>    
     <script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
     <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 
@@ -163,32 +161,31 @@
         cam_pic.push("{{url_for('static', filename='uploads/')}}" + "{{file}}");
         {% endfor %}
 
-        function sendMultiFiles() {
+        function sendMultiFiles(id) {
                 
-                changeView("ocr")
-                 var form_data = new FormData($('#upload-file')[0]);
-                
-                console.log("Sending files", form_data)
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url_for('dashboard') }}",
-                    data: form_data,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    async: false,
-                    success: function(results) {
-                        $('#result_text').html(results.text);
-                        console.log("Ok", results)
-                        changeView("result")
-                    },
-                    error: function(error) {
-                        console.log(error)
-                    }
-                });
+            changeView("ocr")
+            var form_data = new FormData($('#'+id)[0]);
+
+            console.log("Sending files", form_data)
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('dashboard') }}",
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function(results) {
+                    $('#result_text').html(results.text);
+                    console.log("Ok", results)
+                    changeView("result")
+                },
+                error: function(error) {
+                    console.log(error)
+                }
+            });
         }
     </script>
-    <script src="{{url_for('static', filename='js/functions.js')}}"></script>
     
 </body>
 </html>
