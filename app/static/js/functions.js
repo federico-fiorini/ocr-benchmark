@@ -12,7 +12,7 @@ function doOcr(id){
     
     switch($('#mode option:selected').text()){
         case "Local":
-            localOrc(form_data)
+            localOcr(form_data)
             break;
         case "Remote":
             sendMultiFiles(form_data)
@@ -28,11 +28,11 @@ function doOcr(id){
 
     
 var cam_pic = [];
-function localOrc(form_data) { 
+function localOcr(form_data) { 
 
-    console.log("Processing files", form_data)
+    console.log("Processing files", form_data) 
     
-    
+    cam_pic = [form_data.get("files")];
     // Simulate orc by delay
         /*
     setTimeout(function(){  
@@ -50,9 +50,12 @@ function localOrc(form_data) {
                     console.log(result);
                     ocr_result += result['text'];
                     if(count == (cam_pic.length)) {
-                            console.log("Ready to submit");
-                            document.getElementById('ocr_result').value = ocr_result;
-                            document.getElementById('ocrForm').submit();
+                            //console.log("Ready to submit");
+                            //document.getElementById('ocr_result').value = ocr_result;
+                            //document.getElementById('ocrForm').submit();
+                            $('#result_text').html(ocr_result);
+                            console.log("Ok")
+                            changeView("result")
                     }
         })
     }
