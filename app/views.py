@@ -1,6 +1,6 @@
 from app import app
 from external import BackEndService
-from flask import request, session, redirect, url_for, render_template
+from flask import request, session, redirect, url_for, render_template, jsonify
 from werkzeug import secure_filename
 import requests
 import os
@@ -55,22 +55,28 @@ def login():
     return render_template('login.html', error=None, salt=SALT)
 
 
-@app.route("/dashboard", methods=['GET'])  # TODO: add functions 
+@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: add functions 
 def dashboard():
 
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
-    
+     
     # If POST: handle call
     if request.method == 'POST':
        
-        files = request.form.get('files') 
+        files = request.files.getlist("files")
  
-        filenames = getFiles(files)
+        print("recieved files: " + str(files))
         
-        response = "text from ocr"
-        return jsonify(response.json())
+        #filenames = getFiles(files)
+        text = ""
+        for file in files: 
+            text += "    file >>>>" +file.filename 
+            
+        print("generated response: " + str(files))
+        response = {"text": text};
+        return jsonify(**response)
         #generate result
         
     return render_template('dashboard.html')
@@ -80,7 +86,6 @@ def dashboard():
 
 def getFiles(files):
     # Get the name of the uploaded file
-    filenames = []
 	
     for file in files:
         # Check if the file is one of the allowed types/extensions
@@ -94,3 +99,5 @@ def getFiles(files):
             filenames.append(filename)
             # Redirect the user to the uploaded_file route, which
             # will basicaly show on the browser the uploaded file
+    return filenames
+            
