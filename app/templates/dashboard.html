@@ -67,15 +67,27 @@
     <div class="container hidden" id="camera">
 
         <!--h2 class="form-signin-heading">The camera</h2-->
-        
-        <div id="preview" style=" height:60vh;  width:50vh ;border-style: solid; "> 
-              <img src="" alt="" id="preview-pic">
+        <div class="row">
+            <div id="preview"  class=" col-md-4" style="
+    margin: 0 auto;text-align:center; float: none; background-color: lightgrey; height:60vh;  width:50vh ;border-style: solid; ">
+               <img src="" alt="" id="preview-pic">
+               
+            </div>
         </div>
-        <!--button type="button" class="btn btn-default">Take a picture</button-->
-                <form id="upload-photos" method="post" enctype="multipart/form-data">  
+        <div class="row">
+            <div id="preview"  class=" col-md-4" style="
+    margin: 0 auto;text-align:center; float: none; ">
+                <label for="cam_pic" type="button" class="btn btn-default">Take a picture
+                 <form id="upload-photos" method="post" enctype="multipart/form-data">  
                    <input type="file" name="files" id="cam_pic" class="cam_pic_class" accept="image/*" capture="camera" value="Take a picture"/>
                  </form>  
-                <label for="cam_pic" type="button" class="btn btn-default">Take a picture</label>
+                </label>
+                
+            </div>
+        </div>
+        <!--button type="button" class="btn btn-default">Take a picture</button-->
+                
+                
         <div class="col-xs-12">  
             <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
             <input value="Optical character recognition" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')">
