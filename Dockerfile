@@ -25,4 +25,4 @@ RUN /.env/bin/pip install -r /app/requirements.txt
 EXPOSE 5000
 
 # run our flask app inside the container
-CMD /.env/bin/python /app/run.py
+CMD ["/.env/bin/python", "/app/run.py"]
