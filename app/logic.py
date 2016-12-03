@@ -16,9 +16,5 @@ def perform_ocr(img_path):
     return result
 
 
-class LoginService:
-    def __init__(self):
-        pass
-
-    def login(self, username, password):
-        return True
+def login(self, username, password):
+    return True
