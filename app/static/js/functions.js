@@ -7,18 +7,18 @@ function changeView(newView){
 }
 
 function doOcr(id){
-    changeView("ocr")
+    changeView("ocr");
     var form_data = new FormData($('#'+id)[0]);
     
     switch($('#mode option:selected').text()){
         case "Local":
-            localOcr(form_data)
+            localOcr(form_data);
             break;
         case "Remote":
-            sendMultiFiles(form_data)
+            sendMultiFiles(form_data);
             break;
         case "Benchmark":
-            console.error("not implemented")
+            console.error("not implemented");
             break;
         default:
             console.error("not implemented")
@@ -30,16 +30,10 @@ function doOcr(id){
 var cam_pic = [];
 function localOcr(form_data) { 
 
-    console.log("Processing files", form_data) 
+    console.log("Processing files", form_data);
     
     cam_pic = [form_data.get("files")];
-    // Simulate orc by delay
-        /*
-    setTimeout(function(){  
-        
-        window.location = "result";        
-    }, 2000);
-    */
+
     var ocr_result = "";
     console.log(cam_pic);
     var count = 0;
@@ -54,7 +48,7 @@ function localOcr(form_data) {
                             //document.getElementById('ocr_result').value = ocr_result;
                             //document.getElementById('ocrForm').submit();
                             $('#result_text').html(ocr_result);
-                            console.log("Ok")
+                            console.log("Ok");
                             changeView("result")
                     }
         })
@@ -64,7 +58,7 @@ function localOcr(form_data) {
 var ajaxURL;
 function sendMultiFiles(form_data) { 
 
-    console.log("Sending files", form_data)
+    console.log("Sending files", form_data);
     $.ajax({
         type: "POST",
         url: ajaxURL,
@@ -75,7 +69,7 @@ function sendMultiFiles(form_data) {
         async: false,
         success: function(results) {
             $('#result_text').html(results.text);
-            console.log("Ok", results)
+            console.log("Ok", results);
             changeView("result")
         },
         error: function(error) {

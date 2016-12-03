@@ -109,3 +109,14 @@ visibility: hidden;
 	*/
 	visibility: hidden;
 }
+
+#logout {
+  position: absolute;
+  right: 0;
+  top:0;
+  margin: 10px;
+}
+
+.text-center {
+  text-align: center;
+}

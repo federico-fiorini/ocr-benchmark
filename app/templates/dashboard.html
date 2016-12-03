@@ -26,7 +26,7 @@
     <script> 
         ajaxURL = "{{ url_for('dashboard') }}";
         //var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
-        {% for file in files %}
+        {% for row in rows %}
             cam_pic.push("{{url_for('static', filename='uploads/')}}" + "{{file}}");
         {% endfor %}
     </script>
@@ -35,34 +35,33 @@
 
 <body>
     <div class="container" id="dashboard">
-        <h2 class="form-signin-heading">Select something</h2>
+        <h2 class="form-signin-heading text-center">Select mode</h2>
         
         <select class="selectpicker btn-block" data-style="btn-info" id="mode">
-            <option {% if guest %} selected {% endif %}>Local</option>
-            <option {% if guest %} disabled {% else %} selected {% endif %}>Remote</option> 
-            <option disabled>Benchmark</option> 
+            <option  selected>Local</option>
+            <option>Remote</option>
+            <option>Benchmark</option>
         </select>
-    
+        <br>
 
         <div class="col-xs-6">  
-                <button class="btn btn-primary btn-block"   onClick="changeView('camera')" role="button">Scan</button>
+            <button class="btn btn-primary btn-block" onClick="changeView('camera')" role="button">Take picture</button>
         </div> 
         
             <div class="col-xs-6"> 
                 <fieldset>
                     <label class="btn btn-primary btn-block" role="button">   
-                        Select file(s)
+                        Select
                         <form id="upload-files" method="post" enctype="multipart/form-data"> 
                             <input type="file" name="files" id="multiFiles" style="display: none;" onchange="doOcr('upload-files')" multiple>
                         </form>  
                     </label>
                 </fieldset>                   
             </div> 
-        <h3 class="form-signin-heading">History</h3>
+        <h3 class="form-signin-heading text-center">History</h3>
+        <br>
     </div> <!-- /container -->
 
-    
-    
     
     <div class="container hidden" id="camera">
 
@@ -87,16 +86,15 @@
         </div>
         <!--button type="button" class="btn btn-default">Take a picture</button-->
                 
-                
-        <div class="col-xs-12">  
-            <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
-            <input value="Optical character recognition" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')">
+        <div class="col-xs-6">
+            <button class="btn btn-primary btn-block"   onclick="changeView('dashboard')"  role="button">⬅ Back</button>
         </div>
-        <div class="col-xs-12">  
-            <button class="btn btn-primary btn-block"   onclick="changeView('dashboard')"  role="button">⬅ Back to dashboard</button>
-        </div>  
+        <div class="col-xs-6">
+            <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
+            <input value="OCR" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')">
+        </div>
+
     </div> <!-- /container -->
-    
 
     
     
@@ -107,17 +105,20 @@
     
     
     <div class="container hidden" id="result">
-        <h2 class="form-signin-heading">The result text</h2>
+        <h2 class="form-signin-heading text-center">Result</h2>
         <div class="form-group">
-            <textarea class="form-control" rows="5" id="result_text"> 
+            <textarea class="form-control" rows="15" id="result_text">
             
             </textarea>
         </div>
-        
-        <button type="button" class="btn btn-default">Save</button>
-        <div class="col-xs-12">  
-            <button class="btn btn-primary btn-block" onclick="changeView('dashboard')"  role="button">⬅ Back to dashboard</button>
-        </div>  
+
+        <div class="col-xs-6">
+            <button class="btn btn-primary btn-block" onclick="changeView('dashboard')"  role="button">⬅ Back</button>
+        </div>
+        <div class="col-xs-6">
+            <button class="btn btn-success btn-block" role="button">Save</button>
+        </div>
+
     </div> <!-- /container -->
  
  
@@ -127,18 +128,12 @@
       <h2 class="form-signin-heading">The results of the benchmark</h2>
         
         <div class="col-xs-12">  
-            <button class="btn btn-primary btn-block"  onclick="changeView('dashboard')" role="button">⬅ Back to dashboard</button>
+            <button class="btn btn-primary btn-block"  onclick="changeView('dashboard')" role="button">⬅ Back</button>
         </div>  
     </div> <!-- /container -->
     
-    <div class="container" id="logoff">
-         <div class="row">
-            <div class="col-md-11"></div>
-            <div class="col-md-1 text-right">
-                <a href="{{ url_for('logoff') }}" class="btn-link pull-right" >Log off</a>
-            </div>
-        </div>  
-         
+    <div id="logout">
+        <a href="{{ url_for('logout') }}" class="btn-link pull-right" >Log out</a>
     </div> 
 </body>
 </html>

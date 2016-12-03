@@ -1,20 +1,23 @@
 from app import app
-from external import BackEndService
+from logic import LoginService
 from flask import request, session, redirect, url_for, render_template, jsonify
 from werkzeug import secure_filename
 import requests
 import os
 import time
 
-SALT = "fV3Q26FcTz2DsHFf"
+SALT = app.config['SALT']
 
-# This is the path to the upload directory
-#app.config['UPLOAD_FOLDER'] = url_for('static', filename='uploads/')
 
-# For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
+    """
+    For a given file, return whether it's an allowed type or not
+    :param filename:
+    :return:
+    """
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
 
 @app.before_request
 def before_request():
@@ -29,31 +32,23 @@ def login():
     
     # If logged in already: redirect to dashboard page
     if 'logged_in' in session and session['logged_in'] == True:
-        return redirect(url_for('dashboard')) 
+        return redirect(url_for('dashboard'))
 
     # If POST: check login
     if request.method == 'POST':
 
         username = request.form['inputName']
         password = request.form['hash'] 
-        if username == "guest" and password == "":
-            session['guest'] = True;
-            print("new quest session")
-        else:
-            session['guest'] = False;
-            print("new session for " + username[:2] + "******")
-            try:       
-                service = BackEndService()
-                correct_login = service.login(username, password)
 
-                # If not logged in: show error
-                if not correct_login:
-                    session['logged_in'] = False
-                    return render_template('login.html', error="Invalid credentials", salt=SALT)
-            except requests.ConnectionError as e:
-                session['logged_in'] = False
-                return render_template('login.html', error="Service not available, try again later", salt=SALT)
-            # Otherwise: redirect to dashboard page
+        service = LoginService()
+        correct_login = service.login(username, password)
+
+        # If not logged in: show error
+        if not correct_login:
+            session['logged_in'] = False
+            return render_template('login.html', error="Invalid credentials", salt=SALT)
+
+        # Otherwise: redirect to dashboard page
         session['logged_in'] = True
         return redirect(url_for('dashboard'))
 
@@ -67,17 +62,13 @@ def dashboard():
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
-    if 'guest' not in session: #migration from old session
-        session['logged_in'] = False
-        return redirect(url_for('login')) 
      
     # If POST: handle call
     if request.method == 'POST':
-        if session['guest']:
-            return redirect(url_for('login'))
+
         files = request.files.getlist("files")
  
-        print("recieved files: " + str(files))
+        print("received files: " + str(files))
         
         #filenames = getFiles(files)
         text = ""
@@ -85,32 +76,34 @@ def dashboard():
             text += "    file >>>>" +file.filename 
             
         print("generated response: " + str(files))
-        response = {"text": text};
+        response = {"text": text}
         return jsonify(**response)
-        #generate result
-        
-    return render_template('dashboard.html', guest=session['guest'])
-        
-@app.route("/logoff", methods=['GET'])  # TODO: add functions 
-def logoff(): 
-     print("session ended")
-     session['logged_in'] = False
-     return redirect(url_for('login'))
 
-def getFiles(files):
-    # Get the name of the uploaded file
-	
-    for file in files:
-        # Check if the file is one of the allowed types/extensions
-        if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = secure_filename(file.filename)
-            # Move the file form the temporal folder to
-            # the upload folder we setup
-            filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
-            file.save(filepath)
-            filenames.append(filename)
-            # Redirect the user to the uploaded_file route, which
-            # will basicaly show on the browser the uploaded file
-    return filenames
-            
+    return render_template('dashboard.html')
+
+
+@app.route("/logout", methods=['GET'])  # TODO: add functions
+def logout():
+    session['logged_in'] = False
+    return redirect(url_for('login'))
+
+
+# def getFiles(files):
+#     # Get the name of the uploaded file
+#     filenames = []
+#
+#     for file in files:
+#         # Check if the file is one of the allowed types/extensions
+#         if file and allowed_file(file.filename):
+#             # Make the filename safe, remove unsupported chars
+#             filename = secure_filename(file.filename)
+#
+#             # Move the file form the temporal folder to
+#             # the upload folder we setup
+#             filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
+#             file.save(filepath)
+#             filenames.append(filename)
+#             # Redirect the user to the uploaded_file route, which
+#             # will basicaly show on the browser the uploaded file
+#     return filenames
+
