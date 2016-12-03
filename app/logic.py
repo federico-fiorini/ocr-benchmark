@@ -16,5 +16,5 @@ def perform_ocr(img_path):
     return result
 
 
-def login(self, username, password):
+def login_user(self, username, password):
     return True
