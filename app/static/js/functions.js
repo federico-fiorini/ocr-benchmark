@@ -6,11 +6,28 @@ function changeView(newView){
     currentView = newView;
 }
 
+
+var benchmark = false;
+var benchmarkTimes = {};
+var benchmarkT0;
+function benchmarkStart(){
+    benchmark = true; 
+    benchmarkT0 = performance.now();
+}
+function benchmarkStop(name){ 
+    var t1 = performance.now();
+    benchmarkTimes[name] = (t1 - benchmarkT0);  
+    benchmark = false; 
+}
+
+
+var form_data;
 function doOcr(id){
     changeView("ocr");
-    var form_data = new FormData($('#'+id)[0]);
+    form_data = new FormData($('#'+id)[0]);
     
-    switch($('#mode option:selected').text()){
+    mode = $('#mode option:selected').text();
+    switch(mode){
         case "Local":
             localOcr(form_data);
             break;
@@ -18,13 +35,45 @@ function doOcr(id){
             sendMultiFiles(form_data);
             break;
         case "Benchmark":
-            console.error("not implemented");
+            // start with local
+            benchmarkStart();
+            localOcr(form_data);
             break;
         default:
-            console.error("not implemented")
+            console.error("not implemented");
     }
 }
 
+
+
+function showText(text){
+    $('#result_text').html(text);
+    changeView("result");    
+}
+
+function localDone(text){
+    console.log("Local Done");
+    if(benchmark){
+        benchmarkStop("local");
+        // continue with remote
+        benchmarkStart();
+        sendMultiFiles(form_data);        
+    } else {
+        showText(text);
+    }
+}
+
+function remoteDone(text){  
+    console.log("Remote Done");
+    if(benchmark){
+        benchmarkStop("remote");
+        var result = "Times: local " + Math.round(benchmarkTimes.local) + "ms,  remote " + Math.round(benchmarkTimes.remote)+ "ms"; 
+        $('#benchmark_result_text').html(result);
+        changeView("benchmark");
+    } else {
+        showText(text);
+    }
+}
 
     
 var cam_pic = [];
@@ -47,9 +96,7 @@ function localOcr(form_data) {
                             //console.log("Ready to submit");
                             //document.getElementById('ocr_result').value = ocr_result;
                             //document.getElementById('ocrForm').submit();
-                            $('#result_text').html(ocr_result);
-                            console.log("Ok");
-                            changeView("result")
+                            localDone(ocr_result);
                     }
         })
     }
@@ -68,9 +115,7 @@ function sendMultiFiles(form_data) {
         processData: false,
         async: false,
         success: function(results) {
-            $('#result_text').html(results.text);
-            console.log("Ok", results);
-            changeView("result")
+            remoteDone(results.text)
         },
         error: function(error) {
             console.log(error)
