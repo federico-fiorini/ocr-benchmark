@@ -50,8 +50,6 @@ function doOcr(id){
     }
 }
 
-
-
 function showText(text){
     $('#result_text').html(text);
     changeView("result");    

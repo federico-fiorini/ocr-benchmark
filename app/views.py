@@ -1,5 +1,6 @@
 from app import app
-from logic import LoginService
+from logic import login_user
+from utils import allowed_file
 from flask import request, session, redirect, url_for, render_template, jsonify
 from werkzeug import secure_filename
 import requests
@@ -7,16 +8,6 @@ import os
 import time
 
 SALT = app.config['SALT']
-
-
-def allowed_file(filename):
-    """
-    For a given file, return whether it's an allowed type or not
-    :param filename:
-    :return:
-    """
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
 @app.before_request
@@ -40,8 +31,7 @@ def login():
         username = request.form['inputName']
         password = request.form['hash'] 
 
-        service = LoginService()
-        correct_login = service.login(username, password)
+        correct_login = login_user(username, password)
 
         # If not logged in: show error
         if not correct_login:
@@ -73,7 +63,7 @@ def dashboard():
         #filenames = getFiles(files)
         text = ""
         for file in files: 
-            text += "    file >>>>" +file.filename 
+            text += "    file >>>>" + file.filename
             
         print("generated response: " + str(files))
         response = {"text": text}
