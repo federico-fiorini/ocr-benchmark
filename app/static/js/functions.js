@@ -122,3 +122,8 @@ function sendMultiFiles(form_data) {
         }
     });
 }
+
+function saveResult() {
+    var blob = new Blob([$('#result_text').html()], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "result.txt");
+}

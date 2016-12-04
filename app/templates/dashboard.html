@@ -22,6 +22,8 @@
     <script src="{{url_for('static', filename='js/functions.js')}}"></script>    
     <script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
     <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
+    <script src='{{url_for('static', filename='js/FileSaver.min.js')}}'></script>
+    
     <!-- Static constants from server -->
     <script> 
         ajaxURL = "{{ url_for('dashboard') }}";
@@ -116,7 +118,7 @@
             <button class="btn btn-primary btn-block" onclick="changeView('dashboard')"  role="button">⬅ Back</button>
         </div>
         <div class="col-xs-6">
-            <button class="btn btn-success btn-block" role="button">Save</button>
+            <button class="btn btn-success btn-block" onclick="saveResult()" role="button">Save</button>
         </div>
 
     </div> <!-- /container -->
