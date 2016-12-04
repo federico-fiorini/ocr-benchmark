@@ -16,15 +16,20 @@ function benchmarkStart(){
 }
 function benchmarkStop(name){ 
     var t1 = performance.now();
-    benchmarkTimes[name] = (t1 - benchmarkT0);  
+    if(!benchmarkTimes[name]) benchmarkTimes[name] = [];
+    benchmarkTimes[name].push(t1 - benchmarkT0);  
+    console.log(benchmarkTimes[name]);
     benchmark = false; 
 }
 
 
 var form_data;
 function doOcr(id){
-    changeView("ocr");
-    form_data = new FormData($('#'+id)[0]);
+    form_data = new FormData($('#'+id)[0]);  
+    if(form_data.getAll("files").length == 0)
+        return;
+    else    
+        changeView("ocr");    
     
     mode = $('#mode option:selected').text();
     switch(mode){
@@ -35,6 +40,7 @@ function doOcr(id){
             sendMultiFiles(form_data);
             break;
         case "Benchmark":
+            benchmarkTimes = {};
             // start with local
             benchmarkStart();
             localOcr(form_data);
@@ -67,7 +73,7 @@ function remoteDone(text){
     console.log("Remote Done");
     if(benchmark){
         benchmarkStop("remote");
-        var result = "Times: local " + Math.round(benchmarkTimes.local) + "ms,  remote " + Math.round(benchmarkTimes.remote)+ "ms"; 
+        var result = "Times:\n local " + benchmarkTimes.local + "ms\n  remote " + benchmarkTimes.remote+ "ms"; 
         $('#benchmark_result_text').html(result);
         changeView("benchmark");
     } else {
@@ -77,35 +83,42 @@ function remoteDone(text){
 
     
 var cam_pic = [];
-function localOcr(form_data) { 
-
-    console.log("Processing files", form_data);
-    
-    cam_pic = [form_data.get("files")];
-
-    var ocr_result = "";
-    console.log(cam_pic);
-    var count = 0;
-    for(var i = 0; i < cam_pic.length; i++){
-        Tesseract.recognize(cam_pic[i])
-            .then(function(result){
-                    count++;
-                    console.log(result);
-                    ocr_result += result['text'];
-                    if(count == (cam_pic.length)) {
-                            //console.log("Ready to submit");
-                            //document.getElementById('ocr_result').value = ocr_result;
-                            //document.getElementById('ocrForm').submit();
-                            localDone(ocr_result);
-                    }
-        })
+var count = 0;
+var ocr_result = ""; 
+function localOcr(form_data, nextPicture) {
+    nextPicture = nextPicture || false;
+    if (!nextPicture) {
+        count = 0;
+        ocr_result = ""; 
+        cam_pic = form_data.getAll("files");
     }
+    console.log("Processing file ", cam_pic[count]);
+    Tesseract.recognize(cam_pic[count])
+        .then(function(result){
+                count++;
+                console.log(result);
+                ocr_result += result['text'];
+                if(count == (cam_pic.length)) {
+                    //console.log("Ready to submit");
+                    //document.getElementById('ocr_result').value = ocr_result;
+                    //document.getElementById('ocrForm').submit();
+                    localDone(ocr_result);
+                    return;
+                } 
+                if (benchmark){
+                    benchmarkStop("local"); 
+                    benchmarkStart();
+                }
+                localOcr(form_data, true);
+                    
+    })
+    
 }
 
 var ajaxURL;
 function sendMultiFiles(form_data) { 
 
-    console.log("Sending files", form_data);
+    console.log("Sending files", form_data.getAll("files"));
     $.ajax({
         type: "POST",
         url: ajaxURL,
