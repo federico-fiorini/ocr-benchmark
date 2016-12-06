@@ -1,9 +1,11 @@
 from app import app
-from app import mongo
-from utils import perform_ocr
-from utils import allowed_file
+from bson import Binary
+from utils import perform_ocr, allowed_file, create_thumbnail
 from werkzeug import secure_filename
 import os
+from flask import session
+from datetime import datetime
+from models import Users, History
 
 
 def login_user(username, password):
@@ -15,22 +17,46 @@ def login_user(username, password):
     """
 
     # Find user and check password
-    user = mongo.db.users.find_one({
-        "username": username
-    })
+    user = Users.get_user(username)
 
-    return user is not None and user['password'] == password
+    is_correct = user is not None and user.password == password
+
+    # Set session values
+    session['logged_in'] = is_correct
+    session['user'] = username if is_correct else None
+
+    return is_correct
 
 
-def save_history(text):
+def save_history(text, thumbnail):
     """
     Save ocr result to mongo
     :param text:
+    :param thumbnail:
     :return:
     """
-    mongo.db.history.insert_one({
-        "text": text
-    })
+
+    username = session['user']
+    timestamp = str(datetime.now())
+
+    # Create new history object
+    new_history = History()
+    new_history.user = username
+    new_history.text = text
+    new_history.thumbnail = Binary(thumbnail.tobytes())
+    new_history.timestamp = timestamp
+
+    # Save to mongo
+    new_history.save()
+
+
+def get_history():
+    username = session['user']
+
+    # Retrieve history for user
+    history = History.get_history_by_user(username)
+    return history
+
 
 
 def save_and_get_text(files):
@@ -41,8 +67,9 @@ def save_and_get_text(files):
     """
 
     text = []
+    first_filepath = ""
 
-    for file in files:
+    for i, file in enumerate(files):
 
         # Check if the file is one of the allowed types/extensions
         if file and allowed_file(file.filename):
@@ -53,6 +80,9 @@ def save_and_get_text(files):
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
 
+            if i == 0:
+                first_filepath = filepath
+
             # Perform ocr to get text
             result = perform_ocr(filepath)
             text.append(result)
@@ -60,7 +90,10 @@ def save_and_get_text(files):
     # Join in unique text
     text = "\n".join(text)
 
+    # Create thumbnail of first image
+    thumbnail = create_thumbnail(first_filepath)
+
     # Save to mongo
-    save_history(text)
+    save_history(text, thumbnail)
 
     return text

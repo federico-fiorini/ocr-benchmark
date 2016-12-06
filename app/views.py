@@ -1,5 +1,5 @@
 from app import app
-from logic import login_user, save_and_get_text
+from logic import login_user, save_and_get_text, get_history
 from flask import request, session, redirect, url_for, render_template, jsonify, make_response
 
 
@@ -31,11 +31,9 @@ def login():
 
         # If not logged in: show error
         if not correct_login:
-            session['logged_in'] = False
             return render_template('login.html', error="Invalid credentials", salt=SALT)
 
         # Otherwise: redirect to dashboard page
-        session['logged_in'] = True
         return redirect(url_for('dashboard'))
 
     # If GET
@@ -60,6 +58,9 @@ def dashboard():
         result_text = save_and_get_text(files)
 
         return make_response(jsonify({'text': result_text}))
+
+    # If GET
+    history = get_history()
 
     return render_template('dashboard.html')
 
