@@ -3,7 +3,7 @@ import pytesseract
 from PIL import Image#, ImageEnhance, ImageFilter
 
 
-def ocr(img_path):
+def perform_ocr(img_path):
     """
     Performs OCR on image and returns text
     :param img_path:

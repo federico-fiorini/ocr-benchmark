@@ -1,21 +1,5 @@
 #!/bin/bash
 
-##### Locally #####
-# Update apt-get and install required packages
-#apt-get update
-#apt-get install git build-essential python python-dev python-pip libffi-dev libssl-dev
-#
-## Install virtualenv
-#pip install --upgrade pip virtualenv
-#
-## Create virtual environments
-#virtualenv .env
-#.env/bin/pip install -r requirements.txt
-#
-## Run
-#./run.py
-
-
 ##### Deploy on gcloud with docker and kubernetes ######
 
 # Make sure to have docker running

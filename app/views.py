@@ -1,11 +1,7 @@
 from app import app
-from logic import login_user
-from utils import allowed_file
-from flask import request, session, redirect, url_for, render_template, jsonify
-from werkzeug import secure_filename
-import requests
-import os
-import time
+from logic import login_user, save_and_get_text
+from flask import request, session, redirect, url_for, render_template, jsonify, make_response
+
 
 SALT = app.config['SALT']
 
@@ -29,7 +25,7 @@ def login():
     if request.method == 'POST':
 
         username = request.form['inputName']
-        password = request.form['hash'] 
+        password = request.form['hash']
 
         correct_login = login_user(username, password)
 
@@ -59,15 +55,11 @@ def dashboard():
         files = request.files.getlist("files")
  
         print("received files: " + str(files))
-        
-        #filenames = getFiles(files)
-        text = ""
-        for file in files: 
-            text += "    file >>>>" + file.filename
-            
-        print("generated response: " + str(files))
-        response = {"text": text}
-        return jsonify(**response)
+
+        # Save files and get text
+        result_text = save_and_get_text(files)
+
+        return make_response(jsonify({'text': result_text}))
 
     return render_template('dashboard.html')
 
@@ -76,24 +68,4 @@ def dashboard():
 def logout():
     session['logged_in'] = False
     return redirect(url_for('login'))
-
-
-# def getFiles(files):
-#     # Get the name of the uploaded file
-#     filenames = []
-#
-#     for file in files:
-#         # Check if the file is one of the allowed types/extensions
-#         if file and allowed_file(file.filename):
-#             # Make the filename safe, remove unsupported chars
-#             filename = secure_filename(file.filename)
-#
-#             # Move the file form the temporal folder to
-#             # the upload folder we setup
-#             filepath = "app" + os.path.join(url_for('static', filename='uploads/'), filename)
-#             file.save(filepath)
-#             filenames.append(filename)
-#             # Redirect the user to the uploaded_file route, which
-#             # will basicaly show on the browser the uploaded file
-#     return filenames
 
