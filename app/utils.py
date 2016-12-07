@@ -28,14 +28,17 @@ def unique_filename(filename):
     return secure_filename(str(uuid.uuid1()) + '.' + extension)
 
 
-
 def get_filepath(filename):
     """
     Return filepath
     :param filename:
     :return:
     """
-    return os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    # Build filepath
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # Return None if it's not a file
+    return filepath if os.path.isfile(filepath) else None
 
 
 def perform_ocr(img_path):
