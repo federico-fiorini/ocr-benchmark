@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -qq update --fix-missing
 
 # Bootstrap the image so that it includes all of our dependencies
-RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
+RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev libmagic-dev tesseract-ocr --assume-yes
 
 COPY . /app
 WORKDIR /app

@@ -1,6 +1,5 @@
 from app import app
-from utils import perform_ocr, allowed_file, create_thumbnail
-from werkzeug import secure_filename
+from utils import perform_ocr, allowed_file, create_thumbnail, unique_filename
 import os
 from flask import session
 from datetime import datetime
@@ -28,7 +27,7 @@ def login_user(username, password):
     return is_correct
 
 
-def save_history(text, thumbnail):
+def save_history(text, thumbnail, filenames):
     """
     Save ocr result to mongo
     :param text:
@@ -48,6 +47,7 @@ def save_history(text, thumbnail):
     new_history.text = text
     new_history.thumbnail = thumbnail
     new_history.timestamp = timestamp
+    new_history.source_files = filenames
 
     # Save to mongo
     new_history.save()
@@ -67,7 +67,8 @@ def get_history():
     return map(lambda x: {
         'text': x['text'],
         'timestamp': x['timestamp'],
-        'thumbnail': x['thumbnail']
+        'thumbnail': x['thumbnail'],
+        'source-files': x['source_files']
     }, history)
 
 
@@ -80,6 +81,7 @@ def save_and_get_text(files):
 
     text = []
     times = []
+    filenames = []
     first_filepath = ""
 
     for i, file in enumerate(files):
@@ -90,7 +92,8 @@ def save_and_get_text(files):
             start_time = time.time()
 
             # Make the filename safe, remove unsupported chars
-            filename = secure_filename(file.filename)
+            filename = unique_filename(file.filename)
+            filenames.append(filename)
 
             # Save file
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -114,6 +117,6 @@ def save_and_get_text(files):
     thumbnail = create_thumbnail(first_filepath)
 
     # Save to mongo
-    save_history(text, thumbnail)
+    save_history(text, thumbnail, filenames)
 
     return text, times

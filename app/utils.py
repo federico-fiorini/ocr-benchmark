@@ -3,6 +3,9 @@ import pytesseract
 from PIL import Image#, ImageEnhance, ImageFilter
 import base64
 import cStringIO
+from werkzeug import secure_filename
+import uuid
+import os
 
 
 def allowed_file(filename):
@@ -13,6 +16,26 @@ def allowed_file(filename):
     """
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+def unique_filename(filename):
+    """
+    Generate unique filename
+    :param filename:
+    :return:
+    """
+    extension = filename.rsplit('.', 1)[1] if '.' in filename else 'jpeg'
+    return secure_filename(str(uuid.uuid1()) + '.' + extension)
+
+
+
+def get_filepath(filename):
+    """
+    Return filepath
+    :param filename:
+    :return:
+    """
+    return os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
 
 def perform_ocr(img_path):
@@ -38,7 +61,7 @@ def create_thumbnail(img_path):
     """
     # Check file path
     if img_path is None or img_path == "":
-        return None
+        return ""
 
     # Set thumbnail size
     size = 128, 128

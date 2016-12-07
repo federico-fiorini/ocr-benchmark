@@ -19,6 +19,7 @@ class History(mongo.Document):
     thumbnail = mongo.StringField(required=False)
     timestamp = mongo.StringField(required=True)
     text = mongo.StringField(required=True)
+    source_files = mongo.ListField(required=True)
 
     @staticmethod
     def get_history_by_user(username):

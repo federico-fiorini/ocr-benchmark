@@ -1,7 +1,8 @@
 from app import app
 from logic import login_user, save_and_get_text, get_history
-from flask import request, session, redirect, url_for, render_template, jsonify, make_response
-
+from utils import get_filepath
+from flask import request, session, redirect, url_for, render_template, jsonify, make_response, send_file
+import magic
 
 SALT = app.config['SALT']
 
@@ -65,12 +66,33 @@ def dashboard():
 
 @app.route("/history", methods=['GET'])
 def history():
+    """
+    Endpoint to retrieve history of logged user
+    :return:
+    """
     history = get_history()
     return make_response(jsonify({'history': history}))
 
 
+@app.route("/image/<filename>", methods=['GET'])
+def image(filename):
+    """
+    Endpoint to retrieve source image by name
+    :param filename:
+    :return:
+    """
+    filepath = get_filepath(filename)
+
+    mime = magic.Magic(mime=True)
+    return send_file(filepath, mimetype=mime.from_file(filepath))
+
+
 @app.route("/logout", methods=['GET'])
 def logout():
+    """
+    Perform logout
+    :return:
+    """
     session['logged_in'] = False
     return redirect(url_for('login'))
 
