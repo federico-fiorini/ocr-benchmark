@@ -40,32 +40,36 @@ def login():
     return render_template('login.html', error=None, salt=SALT)
 
 
-@app.route("/dashboard", methods=['GET', 'POST'])  # TODO: add functions 
+@app.route("/dashboard", methods=['GET', 'POST'])
 def dashboard():
 
     # Check if logged in
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
-     
+
     # If POST: handle call
     if request.method == 'POST':
 
         files = request.files.getlist("files")
- 
+
         print("received files: " + str(files))
 
         # Save files and get text
-        result_text = save_and_get_text(files)
+        result_text, times = save_and_get_text(files)
 
-        return make_response(jsonify({'text': result_text}))
+        return make_response(jsonify({'text': result_text, 'times': times}))
 
-    # If GET
-    history = get_history()
-
+    # If GET render the page
     return render_template('dashboard.html')
 
 
-@app.route("/logout", methods=['GET'])  # TODO: add functions
+@app.route("/history", methods=['GET'])
+def history():
+    history = get_history()
+    return make_response(jsonify({'history': history}))
+
+
+@app.route("/logout", methods=['GET'])
 def logout():
     session['logged_in'] = False
     return redirect(url_for('login'))

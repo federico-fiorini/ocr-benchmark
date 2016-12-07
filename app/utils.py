@@ -1,6 +1,8 @@
 from app import app
 import pytesseract
 from PIL import Image#, ImageEnhance, ImageFilter
+import base64
+import cStringIO
 
 
 def allowed_file(filename):
@@ -30,7 +32,7 @@ def perform_ocr(img_path):
 
 def create_thumbnail(img_path):
     """
-    Create thumbnail
+    Create thumbnail and return base-64 encoded
     :param img_path:
     :return:
     """
@@ -41,7 +43,13 @@ def create_thumbnail(img_path):
     # Set thumbnail size
     size = 128, 128
 
-    # Create thumbnail and return it
+    # Create thumbnail
     img = Image.open(img_path)
     img.thumbnail(size)
-    return img
+
+    # StringIO buffer
+    buffer = cStringIO.StringIO()
+    img.convert('RGB').save(buffer, format="JPEG")
+
+    # Encode in base-64
+    return base64.b64encode(buffer.getvalue())

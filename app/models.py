@@ -16,7 +16,7 @@ class Users(mongo.Document):
 
 class History(mongo.Document):
     user = mongo.StringField(required=True)
-    thumbnail = mongo.BinaryField(required=False)
+    thumbnail = mongo.StringField(required=False)
     timestamp = mongo.StringField(required=True)
     text = mongo.StringField(required=True)
 
