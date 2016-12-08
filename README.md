@@ -31,7 +31,10 @@ To run it locally follow these steps:
 
     # Run
     ./run.py
-   
+    
+    # Open the browser at the given IP address
+
+
 ### DEPLOYMENT
 To deploy on google cloud follow these steps:
 
@@ -39,9 +42,22 @@ To deploy on google cloud follow these steps:
     
     # 2) Run deployment script
     ./deploy.sh
+    
+    # 3) Open the browser at the given IP address
 
 
 To roll out an update run:
 
     # Deploy the last version of the code
-    ./roll_update.sh
+    ./roll_update.sh v2
+
+
+### HOW TO USE IT
+Login with one of the following test users:
+
+
+- username: `user1`, password: `password1`
+- username: `user2`, password: `password2`
+- username: `user3`, password: `password3`
+
+
