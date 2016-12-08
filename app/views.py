@@ -2,7 +2,6 @@ from app import app
 from logic import login_user, save_and_get_text, get_history
 from utils import get_filepath
 from flask import request, session, redirect, url_for, render_template, jsonify, make_response, send_file, abort
-import magic
 
 SALT = app.config['SALT']
 
@@ -87,8 +86,7 @@ def image(filename):
     if filepath is None:
         abort(404)
 
-    mime = magic.Magic(mime=True)
-    return send_file(filepath, mimetype=mime.from_file(filepath))
+    return send_file(filepath)
 
 
 @app.route("/logout", methods=['GET'])

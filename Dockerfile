@@ -2,12 +2,13 @@ FROM ubuntu:14.04
 
 # no tty
 ENV DEBIAN_FRONTEND noninteractive
+ENV MONGODB_HOST mongodb://mongo-1,mongo-2,mongo-3:27017
 
 # get up to date
 RUN apt-get -qq update --fix-missing
 
 # Bootstrap the image so that it includes all of our dependencies
-RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev libmagic-dev tesseract-ocr --assume-yes
+RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
 
 COPY . /app
 WORKDIR /app

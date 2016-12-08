@@ -7,6 +7,32 @@ from models import Users, History
 import time
 
 
+def init_test_users(json_file):
+    """
+    Init mongo database with test users
+    :param json_file:
+    :return:
+    """
+    import json
+
+    with open(json_file) as user_data:
+        # Load json file
+        test_users = json.load(user_data)
+
+        # Check if each user exists and add it if not
+        for test_user in test_users:
+            user = Users.get_user(test_user['username'])
+
+            if user is not None:
+                continue
+
+            # Save new user
+            user = Users()
+            user.username = test_user['username']
+            user.password = test_user['password']
+            user.save()
+
+
 def login_user(username, password):
     """
     Check if username and password are correct

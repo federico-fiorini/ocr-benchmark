@@ -22,10 +22,7 @@ To run it locally follow these steps:
     # Run mongodb deamon in a new terminal
     mongod
     
-    # Back to the first terminal: create database and import test users
-    mongorestore -d remote_ocr mongo/remote_ocr
-    
-    # Create virtual environment
+    # Back to previous terminal: create virtual environment
     virtualenv .env
     .env/bin/pip install -r requirements.txt
     
