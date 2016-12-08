@@ -25,7 +25,7 @@ function benchmarkStop(name){
 
 var form_data;
 function doOcr(id){
-    form_data = new FormData($('#'+id)[0]);  
+    form_data = new FormData($('#'+id)[0]);
     if(form_data.getAll("files").length == 0)
         return;
     else    
@@ -49,6 +49,8 @@ function doOcr(id){
             console.error("not implemented");
     }
 }
+
+
 
 function showText(text){
     $('#result_text').html(text);
@@ -79,7 +81,9 @@ function remoteDone(text){
     }
 }
 
-    
+
+
+var img = new Image();   
 var cam_pic = [];
 var count = 0;
 var ocr_result = ""; 
@@ -91,26 +95,40 @@ function localOcr(form_data, nextPicture) {
         cam_pic = form_data.getAll("files");
     }
     console.log("Processing file ", cam_pic[count]);
-    Tesseract.recognize(cam_pic[count])
-        .then(function(result){
-                count++;
-                console.log(result);
-                ocr_result += result['text'];
-                if(count == (cam_pic.length)) {
-                    //console.log("Ready to submit");
-                    //document.getElementById('ocr_result').value = ocr_result;
-                    //document.getElementById('ocrForm').submit();
-                    localDone(ocr_result);
-                    return;
-                } 
-                if (benchmark){
-                    benchmarkStop("local"); 
-                    benchmarkStart();
-                }
-                localOcr(form_data, true);
-                    
-    })
-    
+    var c = document.createElement("canvas");
+	c.setAttribute("id", "my-image");
+	var reader  = new FileReader();
+	reader.readAsDataURL(cam_pic[count]);
+	reader.onload = function () {
+		img.src = reader.result;
+		Caman(c, img.src, function () {
+			this.sharpen(100);
+			this.contrast(50);
+			this.gamma(4);
+			this.greyscale();
+			this.render(function() {
+				img.src = c.toDataURL("image/png", 1);
+				Tesseract.recognize(img.src)
+					.then(function(result){
+							count++;
+							console.log(result);
+							ocr_result += result['text'];
+							if(count == (cam_pic.length)) {
+							    //console.log("Ready to submit");
+							    //document.getElementById('ocr_result').value = ocr_result;
+							    //document.getElementById('ocrForm').submit();
+							    localDone(ocr_result);
+							    return;
+							} 
+							if (benchmark){
+							    benchmarkStop("local"); 
+							    benchmarkStart();
+							}
+							localOcr(form_data, true);
+					})
+			})
+		})
+	 };
 }
 
 var ajaxURL;
