@@ -1,6 +1,6 @@
 from app import app
 import pytesseract
-from PIL import Image#, ImageEnhance, ImageFilter
+from PIL import Image, ImageEnhance#, ImageFilter
 import base64
 import cStringIO
 from werkzeug import secure_filename
@@ -53,6 +53,11 @@ def perform_ocr(img_path):
 
     # Perform ocr and return result
     img = Image.open(img_path)
+    img.convert('L')
+    sharpness = ImageEnhance.Sharpness(img)
+    sharpness.enhance(2.0)
+    contrast = ImageEnhance.Contrast(image)
+    contrast.enhance(1.5)
     return pytesseract.image_to_string(img)
 
 
