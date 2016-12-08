@@ -11,9 +11,21 @@ gcloud config set account "mcc.fall.2016.g14@gmail.com"
 gcloud config set compute/zone europe-west1-b
 gcloud config set project $PROJECT_ID
 
+# !Make sure to have docker running!
+# Build docker image
+docker build -t gcr.io/$PROJECT_ID/backend:v1 .
+
+# Push docker image to gcloud
+gcloud docker -- push gcr.io/$PROJECT_ID/backend:v1
+
+# Create container cluster
+gcloud container clusters create backend
+gcloud container clusters get-credentials backend
+
+
 ##### Create mongo replica ######
 
-## Clone mongo sidecar repo
+# Clone mongo sidecar repo
 git clone https://github.com/leportlabs/mongo-k8s-sidecar.git
 cd mongo-k8s-sidecar/example
 
@@ -22,21 +34,13 @@ make add-replica DISK_SIZE=200GB ZONE=europe-west1-b ENV=GoogleCloudPlatform
 make add-replica DISK_SIZE=200GB ZONE=europe-west1-b ENV=GoogleCloudPlatform
 make add-replica DISK_SIZE=200GB ZONE=europe-west1-b ENV=GoogleCloudPlatform
 
-##### Deploy on gcloud with docker and kubernetes ######
+printf "\n\nWaiting for mongo replica to elect master\n"
+sleep 10
 
-# !Make sure to have docker running!
-# Build docker image
-docker build -t gcr.io/$PROJECT_ID/backend:v1 .
-
-# Push docker image to gcloud
-gcloud docker -- push gcr.io/$PROJECT_ID/backend:v1
-
-# Create container
-gcloud container clusters create backend
-gcloud container clusters get-credentials backend
+##### Run kubernetes service ######
 
 # Create pod
-kubectl run backend -- image=gcr.io/$PROJECT_ID/backend:v1 --port=$PORT
+kubectl run backend --image=gcr.io/$PROJECT_ID/backend:v1 --port=$PORT
 
 # Create service
 kubectl expose deployment backend --type="LoadBalancer"
@@ -54,5 +58,8 @@ while true; do
     sleep 2
     echo -ne "#"
 done
+
+# Wait some more seconds
+sleep 10
 
 printf "\n\nFrom your mobile open your browser at https://$EXTERNAL_IP:$PORT \n\n"
