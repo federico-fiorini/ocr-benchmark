@@ -80,12 +80,80 @@ function remoteDone(text){
     console.log("Remote Done");
     if(benchmark){
         benchmarkStop("remote");
-        var result = "Times:\n local " + benchmarkTimes.local + "ms\n  remote " + benchmarkTimes.remote+ "ms"; 
-        $('#benchmark_result_text').html(result);
-        changeView("benchmark");
+        bytesTransferred = [0];//TODO add files
+        showBenchmark(benchmarkTimes.local, benchmarkTimes.remote, bytesTransferred);
     } else {
         showText(text);
     }
+}
+
+
+
+
+function showText(text){
+    $('#result_text').html(text);
+    changeView("result");    
+}
+
+function getStatistics(values){
+  var min = Math.min.apply(null, values)
+  var max = Math.max.apply(null, values)
+  var sum = values.reduce(function(a, b) { return a + b; });
+  var avg = sum / values.length;
+  var sqDiffs = values.map(function(value){return (value - avg) * (value - avg);});
+  var sqSum = sqDiffs.reduce(function(a, b) { return a + b; });
+  var sDev = Math.sqrt(sqSum / values.length);
+  return[Math.round(min * 100) / 100, Math.round(max * 100) / 100, Math.round(avg * 100) / 100, Math.round(sDev * 100) / 100];
+  
+}
+function showBenchmark(localTimes, remoteTimes, bytesTransferred){  
+   
+  var result = [
+    ["", ["min","max","average","deviation"]],
+    ["Local times (ms) " , getStatistics(localTimes)],
+    ["Remote times (ms) " , getStatistics(remoteTimes)],
+    ["Remote bytes" , getStatistics(bytesTransferred)],
+  ]; 
+  
+    var d = document;
+
+    var fragment = d.createDocumentFragment();
+
+    var tr = d.createElement("tr");
+    var td = d.createElement("td");
+    td.innerHTML = "---------------";
+    tr.appendChild(td);
+    fragment.appendChild(tr);
+    
+    var tr = d.createElement("tr");
+    var td = d.createElement("td");
+    td.innerHTML = "Result for " + localTimes.length + " file(s)";
+    tr.appendChild(td);
+    fragment.appendChild(tr);
+    
+    for (i = 0; i < result.length; i++) {
+        var tr = d.createElement("tr");
+
+        var td = d.createElement("td");
+        td.style.width = '30%';
+        td.innerHTML = result[i][0];
+        tr.appendChild(td);
+        for (j = 0; j < result[i][1].length; j++) {    
+            var td = d.createElement("td");
+        td.style.width = '20%';
+            td.innerHTML = result[i][1][j];
+            tr.appendChild(td);
+        }
+
+        //does not trigger reflow
+        fragment.appendChild(tr);
+    }
+
+    var table = d.createElement("table");
+    table.appendChild(fragment);
+    $('#benchmark_result').append(table);
+    
+    changeView("benchmark");
 }
 
 
@@ -155,6 +223,7 @@ function sendMultiFiles(form_data) {
         },
         error: function(error) {
             console.log(error)
+            remoteDone("# Failed: " + error.statusText + " #"); 
         }
     });
 }
