@@ -120,3 +120,21 @@ visibility: hidden;
 .text-center {
   text-align: center;
 }
+
+.hist_text{
+	border: 1px #888 solid;
+	border-radius: 5px;
+	height: 120px;
+	padding: 15px;
+	overflow: hidden;
+	text-overflow: clip;
+}
+
+.hist_elem_text {
+	border: 1px #888 solid;
+	border-radius: 5px;
+	height: 200px;
+	padding: 15px;
+	overflow-y: scroll;
+	margin-bottom: 5px;
+}

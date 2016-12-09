@@ -1,6 +1,13 @@
 
 var currentView = "dashboard";
 function changeView(newView){
+	if(newView == "dashboard") {
+		show_history();
+	}
+	if(newView == "camera"){
+		$(".cam_button").click();
+	}
+	
     $("#" + currentView).addClass('hidden');
     $("#" + newView).removeClass('hidden');
     currentView = newView;

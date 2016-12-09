@@ -12,6 +12,7 @@
     <title>Remote Apps</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
     
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
@@ -21,6 +22,7 @@
     
     <script src="{{url_for('static', filename='js/functions.js')}}"></script>    
     <script src="{{url_for('static', filename='js/camera_func.js')}}"></script>
+	<script src="{{url_for('static', filename='js/history_func.js')}}"></script>
     <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.0.0/caman.full.min.js'></script>
     <script src='{{url_for('static', filename='js/FileSaver.min.js')}}'></script>
@@ -62,6 +64,9 @@
                 </fieldset>                   
             </div> 
         <h3 class="form-signin-heading text-center">History</h3>
+			<br />
+			<div class="list-group history">
+			</div>
         <br>
     </div> <!-- /container -->
 
@@ -94,7 +99,8 @@
         </div>
         <div class="col-xs-6">
             <!--a href="" id="cam_submit_but" class="btn btn-primary btn-block" role="button">Optical character recognition</a-->
-            <input value="OCR" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')">
+            <!--input value="OCR" class="btn btn-primary btn-block"  onClick="doOcr('upload-photos')"-->
+			<button class="btn btn-primary btn-block" onclick="doOcr('upload-photos')"  role="button">OCR</button>
         </div>
 
     </div> <!-- /container -->
@@ -138,6 +144,43 @@
             <button class="btn btn-primary btn-block"  onclick="changeView('dashboard')" role="button">⬅ Back</button>
         </div>  
     </div> <!-- /container -->
+	
+	<div class="container hidden" id="history_element">
+		<div class="well hist_elem_text">
+			
+		</div>
+		<h6>Creation date: <span class="label label-default"> </span> </h6>
+		<div class="row images">
+			
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-xs-6">
+				<button class="btn btn-primary btn-block" onclick="changeView('dashboard')"  role="button">⬅ Back</button>
+			</div>
+			<div class="col-xs-6">
+				<button class="btn btn-success btn-block" onclick="saveHistResult()" role="button">Save</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Creates the bootstrap modal where the image will appear -->
+	<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			<h4 class="modal-title" id="myModalLabel">Image preview</h4>
+		  </div>
+		  <div class="modal-body">
+			<img src="" id="imagepreview" style="width: 400px; height: 264px;" >
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
     
     <div id="logout">
         <a href="{{ url_for('logout') }}" class="btn-link pull-right" >Log out</a>

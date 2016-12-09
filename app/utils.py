@@ -53,6 +53,7 @@ def perform_ocr(img_path):
 
     # Perform ocr and return result
     img = Image.open(img_path)
+    print("Image " + img_path)
     # img.convert('L')
     # sharpness = ImageEnhance.Sharpness(img)
     # sharpness.enhance(2.0)
