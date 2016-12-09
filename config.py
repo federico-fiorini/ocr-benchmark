@@ -1,6 +1,6 @@
 import os
 
-UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', '/images')
+UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', '/tmp')
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'development key')

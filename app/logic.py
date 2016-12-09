@@ -1,7 +1,7 @@
 from app import app
 from utils import perform_ocr, allowed_file, create_thumbnail, unique_filename
 import os
-from flask import session
+from flask import session, url_for
 from datetime import datetime
 from models import Users, History
 import time
@@ -94,7 +94,7 @@ def get_history():
         'text': x['text'],
         'timestamp': x['timestamp'],
         'thumbnail': x['thumbnail'],
-        'source-files': x['source_files']
+        'source-files': map(lambda y: url_for('image', filename=y), x['source_files'])
     }, history)
 
 

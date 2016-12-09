@@ -34,7 +34,9 @@ function show_history_item(idx) {
 	$("#history_element").find(".well").empty();
 	$("#history_element").find(".well").append(hist_data[idx]['text']);
 	$("#history_element").find(".label").empty();
-	$("#history_element").find(".label").append(hist_data[idx]['timestamp']);
+	timestamp = hist_data[idx]['timestamp'].split(":");
+	timestamp = timestamp[0] + ":" + timestamp[1];
+	$("#history_element").find(".label").append(timestamp);
 	var src_files_str = "";
 	$.each(hist_data[idx]['source-files'], function(index, value) {
 		src_files_str += "<div class='col-xs-3'><button class='btn btn-primary btn-block' onclick=show_history_img(" + idx + "," + index + ") role='button'>Img " + (index+1).toString() + "</button></div>";
@@ -45,7 +47,7 @@ function show_history_item(idx) {
 }
 
 function show_history_img(idx, index) {
-	url = "image/" + hist_data[idx]['source-files'][index];
+	url = hist_data[idx]['source-files'][index];
 	console.log(url);
 	$.get(url, function(data, status){
 		img_src = "data:image/jpg;base64," + data; 

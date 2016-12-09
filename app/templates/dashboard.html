@@ -25,9 +25,9 @@
 	<script src="{{url_for('static', filename='js/history_func.js')}}"></script>
     <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/camanjs/4.0.0/caman.full.min.js'></script>
-    <script src='{{url_for('static', filename='js/FileSaver.min.js')}}'></script>
+    <script src="{{url_for('static', filename='js/FileSaver.min.js')}}"></script>
     
-    <!-- Static constants from server -->
+    <!--Static constants from server-->
     <script> 
         ajaxURL = "{{ url_for('dashboard') }}";
         //var cam_pic = "{{url_for('static', filename='uploads/')}}" + "{{file}}";
@@ -62,8 +62,9 @@
                         </form>  
                     </label>
                 </fieldset>                   
-            </div> 
-        <h3 class="form-signin-heading text-center">History</h3>
+            </div>
+
+        <h3 class="form-signin-heading text-center" style="margin-top: 80px;">History</h3>
 			<br />
 			<div class="list-group history">
 			</div>
@@ -134,7 +135,7 @@
  
  
     <div class="container hidden" id="benchmark">
-      <h2 class="form-signin-heading">The results of the benchmark</h2>
+      <h2 class="form-signin-heading">Benchmark results</h2>
         <div class="form-group" id="benchmark_result">
         </div>
         <div class="col-xs-12">  
@@ -146,7 +147,7 @@
 		<div class="well hist_elem_text">
 			
 		</div>
-		<h6>Creation date: <span class="label label-default"> </span> </h6>
+		<h6 id="creation-date">Creation date: <span class="label label-default"> </span> </h6>
 		<div class="row images">
 			
 		</div>
@@ -167,10 +168,10 @@
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-			<h4 class="modal-title" id="myModalLabel">Image preview</h4>
+			<h4 class="modal-title" id="myModalLabel">Original image</h4>
 		  </div>
 		  <div class="modal-body">
-			<img src="" id="imagepreview" style="width: 400px; height: 264px;" >
+			<img src="" id="imagepreview" >
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

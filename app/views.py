@@ -1,10 +1,8 @@
 from app import app
 from logic import login_user, save_and_get_text, get_history
-from utils import get_filepath
-from flask import request, session, redirect, url_for, render_template, jsonify, make_response, send_file, abort
-from PIL import Image, ImageEnhance
-import base64
-import cStringIO
+from utils import get_filepath, encode_base64
+from flask import request, session, redirect, url_for, render_template, jsonify, make_response, abort
+from PIL import Image
 
 SALT = app.config['SALT']
 
@@ -90,13 +88,9 @@ def image(filename):
         abort(404)
     
     img = Image.open(filepath)
-    # StringIO buffer
-    buffer = cStringIO.StringIO()
-    img.convert('RGB').save(buffer, format="JPEG")
 
     # Encode in base-64
-    return base64.b64encode(buffer.getvalue())
-    #return send_file(filepath)
+    return encode_base64(img)
 
 
 @app.route("/logout", methods=['GET'])

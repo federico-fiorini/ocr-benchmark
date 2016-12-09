@@ -53,7 +53,6 @@ def perform_ocr(img_path):
 
     # Perform ocr and return result
     img = Image.open(img_path)
-    print("Image " + img_path)
     # img.convert('L')
     # sharpness = ImageEnhance.Sharpness(img)
     # sharpness.enhance(2.0)
@@ -79,6 +78,15 @@ def create_thumbnail(img_path):
     img = Image.open(img_path)
     img.thumbnail(size)
 
+    return encode_base64(img)
+
+
+def encode_base64(img):
+    """
+    Convert image object to base64 string
+    :param img:
+    :return:
+    """
     # StringIO buffer
     buffer = cStringIO.StringIO()
     img.convert('RGB').save(buffer, format="JPEG")

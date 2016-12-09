@@ -3,6 +3,7 @@ FROM ubuntu:14.04
 # no tty
 ENV DEBIAN_FRONTEND noninteractive
 ENV MONGODB_HOST mongodb://mongo-1,mongo-2,mongo-3:27017
+ENV UPLOAD_FOLDER /images
 
 # get up to date
 RUN apt-get -qq update --fix-missing

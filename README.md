@@ -5,6 +5,10 @@ Mobile friendly web app to perform OCR
 ### INSTRUCTIONS
 To run it locally follow these steps:
  
+    # Install needed dependencies
+    apt-get update --fix-missing
+    apt-get install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
+    
     # Clone the code
     git clone git@git.niksula.hut.fi:cs-e4100/mcc-2016-g14-p2.git
     cd mcc-2016-g14-p2
