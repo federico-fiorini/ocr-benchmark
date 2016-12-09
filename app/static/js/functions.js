@@ -5,7 +5,7 @@ function changeView(newView){
 		show_history();
 	}
 	if(newView == "camera"){
-		$(".cam_button").click();
+		$(".cam_pic_class").click();
 	}
 	
     $("#" + currentView).addClass('hidden');
@@ -149,7 +149,7 @@ function sendMultiFiles(form_data) {
         contentType: false,
         cache: false,
         processData: false,
-        async: false,
+        async: true,
         success: function(results) {
             remoteDone(results.text)
         },
