@@ -76,12 +76,13 @@ function localDone(text){
     }
 }
 
-function remoteDone(text){  
+function remoteDone(text, remoteTimes){  
+    remoteTimes = remoteTimes || [0];
     console.log("Remote Done");
     if(benchmark){
         benchmarkStop("remote");
         bytesTransferred = [0];//TODO add files
-        showBenchmark(benchmarkTimes.local, benchmarkTimes.remote, bytesTransferred);
+        showBenchmark(benchmarkTimes.local, remoteTimes, bytesTransferred);
     } else {
         showText(text);
     }
@@ -219,7 +220,7 @@ function sendMultiFiles(form_data) {
         processData: false,
         async: true,
         success: function(results) {
-            remoteDone(results.text)
+            remoteDone(results.text, results.times)
         },
         error: function(error) {
             console.log(error)
