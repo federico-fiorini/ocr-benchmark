@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Install dependencies
+sudo apt-get install make kubectl docker.io
+
+# Start docker deamon
+sudo service docker start
+
+# Ser variables
 CURR_PWD=${PWD}
 export GOOGLE_APPLICATION_CREDENTIALS="$CURR_PWD/credentials/mcc-2016-g14-p2-c10238f32707.json"
 

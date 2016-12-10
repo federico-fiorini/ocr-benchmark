@@ -223,7 +223,7 @@ function sendMultiFiles(form_data) {
             remoteDone(results.text, results.times)
         },
         error: function(error) {
-            console.log(error)
+            console.log(error);
             remoteDone("# Failed: " + error.statusText + " #"); 
         }
     });
