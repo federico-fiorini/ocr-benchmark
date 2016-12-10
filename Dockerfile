@@ -9,22 +9,33 @@ ENV UPLOAD_FOLDER /images
 RUN apt-get -qq update --fix-missing
 
 # Bootstrap the image so that it includes all of our dependencies
-RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
+RUN apt-get -qq install build-essential python python-dev python-pip \
+python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr cron --assume-yes
 
+# Add crontab file in the cron directory
+ADD crontab /etc/cron.d/delete-cron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/delete-cron
+
+# Copy to /app
 COPY . /app
 WORKDIR /app
 
 RUN mkdir -p /images/
 
-# create a virtualenv we can later use
+# Create a virtualenv
 RUN mkdir -p /.env/
 RUN virtualenv /.env/
 
-# install python dependencies from pypi into venv
+# Install python dependencies in virtualenv
 RUN /.env/bin/pip install -r /app/requirements.txt
 
-# expose a port for the flask development server
+# Expose a port for the flask development server
 EXPOSE 5000
 
-# run our flask app inside the container
+# Run cron
+CMD cron
+
+# Run flask app
 CMD ["/.env/bin/python", "/app/run.py"]
