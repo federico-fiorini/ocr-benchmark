@@ -1,6 +1,5 @@
 #!.env/bin/python
 from app import app
-from OpenSSL import SSL
 import sys
 
 try:

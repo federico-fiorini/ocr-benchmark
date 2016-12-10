@@ -1,0 +1,3 @@
+# Running every day at midnight
+0 0 * * * /app/delete_expired.py
+

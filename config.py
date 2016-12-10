@@ -15,8 +15,4 @@ MONGODB_DB = os.environ.get('MONGODB_DB', 'remote_ocr')
 # Test users file
 TEST_USERS = os.environ.get('TEST_USERS', 'users.json')
 
-# Celery config
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672//')
-TIMEZONE = os.environ.get('TIMEZONE', 'EET')
-
 SOURCE_IMAGE_LIFETIME = os.environ.get('SOURCE_IMAGE_LIFETIME', '7')
