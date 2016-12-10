@@ -9,7 +9,10 @@ ENV UPLOAD_FOLDER /images
 RUN apt-get -qq update --fix-missing
 
 # Bootstrap the image so that it includes all of our dependencies
-RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
+RUN apt-get -qq install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr rabbitmq-server --assume-yes
+
+# Run rabbitmq-server
+RUN rabbitmq-server &
 
 COPY . /app
 WORKDIR /app
@@ -22,6 +25,9 @@ RUN virtualenv /.env/
 
 # install python dependencies from pypi into venv
 RUN /.env/bin/pip install -r /app/requirements.txt
+
+# Run celery deamon
+RUN /.env/bin/celery worker -A app.celery_app -B &
 
 # expose a port for the flask development server
 EXPOSE 5000

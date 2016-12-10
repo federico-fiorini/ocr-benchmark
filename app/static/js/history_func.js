@@ -34,8 +34,7 @@ function show_history_item(idx) {
 	$("#history_element").find(".well").empty();
 	$("#history_element").find(".well").append(hist_data[idx]['text']);
 	$("#history_element").find(".label").empty();
-	timestamp = hist_data[idx]['timestamp'].split(":");
-	timestamp = timestamp[0] + ":" + timestamp[1];
+	timestamp = hist_data[idx]['timestamp'].replace("T", " ");
 	$("#history_element").find(".label").append(timestamp);
 	var src_files_str = "";
 	$.each(hist_data[idx]['source-files'], function(index, value) {

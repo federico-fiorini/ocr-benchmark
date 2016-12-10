@@ -5,6 +5,7 @@ from flask import session, url_for
 from datetime import datetime
 from models import Users, History
 import time
+import isodate
 
 
 def init_test_users(json_file):
@@ -65,7 +66,7 @@ def save_history(text, thumbnail, filenames):
         return
 
     username = session['user']
-    timestamp = str(datetime.now())
+    timestamp = isodate.datetime_isoformat(datetime.now())
 
     # Create new history object
     new_history = History()

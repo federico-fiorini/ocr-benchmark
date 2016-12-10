@@ -41,6 +41,17 @@ def get_filepath(filename):
     return filepath if os.path.isfile(filepath) else None
 
 
+def delete_file(filename):
+    """
+    Helper function to delete a file
+    :param filename:
+    :return:
+    """
+    path = get_filepath(filename)
+    if path is not None:
+        os.remove(path)
+
+
 def perform_ocr(img_path):
     """
     Performs OCR on image and returns text
