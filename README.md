@@ -42,10 +42,11 @@ To run it locally follow these steps:
 ### DEPLOYMENT
 To deploy on google cloud follow these steps:
 
-    # 1) Run Docker client
+    # 1) Install gcloud and authenticate
+    sudo ./install_gcloud.sh
     
     # 2) Run deployment script
-    ./deploy.sh
+    sudo ./deploy.sh
     
     # 3) Open the browser at the given IP address
 
