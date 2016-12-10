@@ -77,18 +77,29 @@ function localDone(text){
 }
 
 function remoteDone(text, remoteTimes){  
-    remoteTimes = remoteTimes || [0];
+    remoteTimes = remoteTimes || [NaN];
     console.log("Remote Done");
     if(benchmark){
         benchmarkStop("remote");
-        bytesTransferred = [0];//TODO add files
+         
+        bytesTransferred = analyze_form_files();
         showBenchmark(benchmarkTimes.local, remoteTimes, bytesTransferred);
     } else {
         showText(text);
     }
 }
 
-
+ 
+function analyze_form_files(){
+  var bytesTransferred = []
+  var files = form_data.getAll("files");
+  for(var i = 0; i < files.length; i++){ 
+    console.log(files[i]);
+    bytesTransferred.push(files[i].size);
+  }
+  console.log(bytesTransferred);
+  return bytesTransferred;
+}
 
 
 function showText(text){
@@ -96,21 +107,30 @@ function showText(text){
     changeView("result");    
 }
 
+
+function round(a){
+  return Math.round(a * 100) / 100;
+}
+
 function getStatistics(values){
   var min = Math.min.apply(null, values)
+  var min_i= values.indexOf(min);
   var max = Math.max.apply(null, values)
-  var sum = values.reduce(function(a, b) { return a + b; });
+  var max_i= values.indexOf(max);
+  var sum = values.reduce(function(a, b) { return a + b; }, 0);
   var avg = sum / values.length;
   var sqDiffs = values.map(function(value){return (value - avg) * (value - avg);});
-  var sqSum = sqDiffs.reduce(function(a, b) { return a + b; });
+  var sqSum = sqDiffs.reduce(function(a, b) { return a + b; }, 0);
   var sDev = Math.sqrt(sqSum / values.length);
-  return[Math.round(min * 100) / 100, Math.round(max * 100) / 100, Math.round(avg * 100) / 100, Math.round(sDev * 100) / 100];
+  return[round(min) +" ("+min_i+")", round(max) +" ("+max_i+")", round(avg) +" ("+round(sDev)+")"];
   
 }
+
+
 function showBenchmark(localTimes, remoteTimes, bytesTransferred){  
-   
+  
   var result = [
-    ["", ["min","max","average","deviation"]],
+    ["", ["min (index)","max (index)","average (deviation)"]],
     ["Local times (ms) " , getStatistics(localTimes)],
     ["Remote times (ms) " , getStatistics(remoteTimes)],
     ["Remote bytes" , getStatistics(bytesTransferred)],
@@ -122,7 +142,7 @@ function showBenchmark(localTimes, remoteTimes, bytesTransferred){
 
     var tr = d.createElement("tr");
     var td = d.createElement("td");
-    td.innerHTML = "---------------";
+    td.innerHTML = "--- ";
     tr.appendChild(td);
     fragment.appendChild(tr);
     
@@ -209,7 +229,7 @@ function localOcr(form_data, nextPicture) {
 
 var ajaxURL;
 function sendMultiFiles(form_data) { 
-
+ 
     console.log("Sending files", form_data.getAll("files"));
     $.ajax({
         type: "POST",
