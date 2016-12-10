@@ -52,12 +52,11 @@ def perform_ocr(img_path):
         return None
 
     # Perform ocr and return result
-    img = Image.open(img_path)
-    # img.convert('L')
-    # sharpness = ImageEnhance.Sharpness(img)
-    # sharpness.enhance(2.0)
-    # contrast = ImageEnhance.Contrast(img)
-    # contrast.enhance(1.5)
+    img = Image.open(img_path).convert('L')
+    sharpness = ImageEnhance.Sharpness(img)
+    img = sharpness.enhance(2.0)
+    contrast = ImageEnhance.Contrast(img)
+    img = contrast.enhance(1.5)
     return pytesseract.image_to_string(img)
 
 
