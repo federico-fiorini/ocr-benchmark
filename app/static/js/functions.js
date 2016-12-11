@@ -195,40 +195,25 @@ function localOcr(form_data, nextPicture) {
     }
 
     console.log("Processing file ", cam_pic[count]);
-    var c = document.createElement("canvas");
-	c.setAttribute("id", "my-image");
-	var reader  = new FileReader();
-	reader.readAsDataURL(cam_pic[count]);
-	reader.onload = function () {
-		img.src = reader.result;
-		Caman(c, img.src, function () {
-			this.sharpen(100);
-			this.contrast(50);
-			this.gamma(4);
-			this.greyscale();
-			this.render(function() {
-				img.src = c.toDataURL("image/png", 1);
-				Tesseract.recognize(img.src)
-					.then(function(result){
-							count++;
-							console.log(result);
-							ocr_result += result['text'];
-							if(count == (cam_pic.length)) {
-							    //console.log("Ready to submit");
-							    //document.getElementById('ocr_result').value = ocr_result;
-							    //document.getElementById('ocrForm').submit();
-							    localDone(ocr_result);
-							    return;
-							} 
-							if (benchmark){
-							    benchmarkStop("local"); 
-							    benchmarkStart();
-							}
-							localOcr(form_data, true);
-					})
-			})
-		})
-	 };
+	
+	Tesseract.recognize(cam_pic[count])
+        .then(function(result){
+                count++;
+                console.log(result);
+                ocr_result += result['text'];
+                if(count == (cam_pic.length)) {
+                    //console.log("Ready to submit");
+                    //document.getElementById('ocr_result').value = ocr_result;
+                    //document.getElementById('ocrForm').submit();
+                    localDone(ocr_result);
+                    return;
+                } 
+                if (benchmark){
+                    benchmarkStop("local"); 
+                    benchmarkStart();
+                }
+                localOcr(form_data, true);	 
+    });
 }
 
 var ajaxURL;
