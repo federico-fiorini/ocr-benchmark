@@ -22,6 +22,9 @@ RUN chmod 0644 /etc/cron.d/delete-cron
 COPY . /app
 WORKDIR /app
 
+# Set google credentials env
+ENV GOOGLE_APPLICATION_CREDENTIALS /credentials/mcc-2016-g14-p2-c10238f32707.json
+
 RUN mkdir -p /images/
 
 # Create a virtualenv
