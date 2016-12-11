@@ -135,6 +135,9 @@ def save_and_get_text(files):
             end_time = time.time()
             times.append(end_time - start_time)
 
+    if first_image is None:
+        return "", []
+
     # Join in unique text
     text = "\n".join(text)
 

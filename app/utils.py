@@ -15,7 +15,7 @@ def allowed_file(filename):
     :return:
     """
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 def unique_filename(filename):
