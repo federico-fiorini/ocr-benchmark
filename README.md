@@ -7,6 +7,16 @@ Uses MongoDB replica set of 3 nodes with persistent disk.
 Uses Google Cloud Storage to save source images.
 
 
+### RESTRICTIONS
+Allowed image extensions:
+
+- jpg
+- jpeg
+- png
+
+
+Not compatible with Safari.
+
 ### INSTRUCTIONS
 To run it locally follow these steps:
  
