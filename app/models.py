@@ -1,17 +1,4 @@
 from app import mongo
-from mongoengine.queryset import DoesNotExist
-
-
-class Users(mongo.Document):
-    username = mongo.StringField(required=True)
-    password = mongo.StringField(required=False)
-
-    @staticmethod
-    def get_user(username):
-        try:
-            return Users.objects.get(username=username)
-        except DoesNotExist:
-            return None
 
 
 class History(mongo.Document):

@@ -3,37 +3,12 @@ from utils import perform_ocr, allowed_file, create_thumbnail, unique_filename, 
 import os
 from flask import session, url_for
 from datetime import datetime, timedelta
-from models import Users, History
+from models import History
 import time
 import isodate
 from external import GoogleCloudStorage
 from PIL import Image
-
-
-def init_test_users(json_file):
-    """
-    Init mongo database with test users
-    :param json_file:
-    :return:
-    """
-    import json
-
-    with open(json_file) as user_data:
-        # Load json file
-        test_users = json.load(user_data)
-
-        # Check if each user exists and add it if not
-        for test_user in test_users:
-            user = Users.get_user(test_user['username'])
-
-            if user is not None:
-                continue
-
-            # Save new user
-            user = Users()
-            user.username = test_user['username']
-            user.password = test_user['password']
-            user.save()
+import json
 
 
 def login_user(username, password):
@@ -43,17 +18,25 @@ def login_user(username, password):
     :param password:
     :return:
     """
+    json_file = app.config['TEST_USERS']
 
-    # Find user and check password
-    user = Users.get_user(username)
+    with open(json_file) as user_data:
+        # Load json file
+        test_users = json.load(user_data)
 
-    is_correct = user is not None and user.password == password
+        is_correct = False
 
-    # Set session values
-    session['logged_in'] = is_correct
-    session['user'] = username if is_correct else None
+        # Check if user is found
+        for user in test_users:
+            if user['username'] == username and user['password'] == password:
+                is_correct = True
+                break
 
-    return is_correct
+        # Set session values
+        session['logged_in'] = is_correct
+        session['user'] = username if is_correct else None
+
+        return is_correct
 
 
 def save_history(text, thumbnail, filenames):

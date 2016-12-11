@@ -12,8 +12,4 @@ app.config.from_object('config')
 # Mongo instance
 mongo = MongoEngine(app)
 
-# Init test users if not present in mongo already
-import logic
-logic.init_test_users(app.config['TEST_USERS'])
-
 from app import views
