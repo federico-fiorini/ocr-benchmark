@@ -66,6 +66,7 @@ function showText(text){
 
 function localDone(text){
     console.log("Local Done");
+
     if(benchmark){
         benchmarkStop("local");
         // continue with remote
@@ -91,7 +92,7 @@ function remoteDone(text, remoteTimes){
 
  
 function analyze_form_files(){
-  var bytesTransferred = []
+  var bytesTransferred = [];
   var files = form_data.getAll("files");
   for(var i = 0; i < files.length; i++){ 
     console.log(files[i]);
@@ -113,9 +114,9 @@ function round(a){
 }
 
 function getStatistics(values){
-  var min = Math.min.apply(null, values)
+  var min = Math.min.apply(null, values);
   var min_i= values.indexOf(min);
-  var max = Math.max.apply(null, values)
+  var max = Math.max.apply(null, values);
   var max_i= values.indexOf(max);
   var sum = values.reduce(function(a, b) { return a + b; }, 0);
   var avg = sum / values.length;
@@ -185,11 +186,13 @@ var count = 0;
 var ocr_result = ""; 
 function localOcr(form_data, nextPicture) {
     nextPicture = nextPicture || false;
+
     if (!nextPicture) {
         count = 0;
         ocr_result = ""; 
         cam_pic = form_data.getAll("files");
     }
+
     console.log("Processing file ", cam_pic[count]);
     var c = document.createElement("canvas");
 	c.setAttribute("id", "my-image");

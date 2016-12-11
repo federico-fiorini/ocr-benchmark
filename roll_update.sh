@@ -21,6 +21,9 @@ docker build -t gcr.io/$PROJECT_ID/backend:$VERSION .
 # Push it to gcloud
 gcloud docker -- push gcr.io/$PROJECT_ID/backend:$VERSION
 
+# Get credentials
+gcloud container clusters get-credentials backend
+
 # Update controller image
 kubectl set image deployment/backend backend=gcr.io/$PROJECT_ID/backend:$VERSION
 
