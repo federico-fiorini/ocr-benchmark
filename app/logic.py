@@ -1,11 +1,13 @@
 from app import app
-from utils import perform_ocr, allowed_file, create_thumbnail, unique_filename, delete_file
+from utils import perform_ocr, allowed_file, create_thumbnail, unique_filename, delete_file, encode_base64
 import os
 from flask import session, url_for
 from datetime import datetime, timedelta
 from models import Users, History
 import time
 import isodate
+from external import GoogleCloudStorage
+from PIL import Image
 
 
 def init_test_users(json_file):
@@ -106,10 +108,12 @@ def save_and_get_text(files):
     :return:
     """
 
+    print files
     text = []
     times = []
     filenames = []
-    first_filepath = ""
+    first_image = None
+    storage = GoogleCloudStorage()
 
     for i, file in enumerate(files):
 
@@ -122,16 +126,27 @@ def save_and_get_text(files):
             filename = unique_filename(file.filename)
             filenames.append(filename)
 
-            # Save file
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-
-            if i == 0:
-                first_filepath = filepath
+            # Image object
+            img = Image.open(file)
 
             # Perform ocr to get text
-            result = perform_ocr(filepath)
+            result = perform_ocr(img)
             text.append(result)
+
+            # Save file to temporary folder
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            img.convert('RGB').save(filepath, optimize=True, quality=85)
+
+            if i == 0:
+                first_image = img
+            else:
+                img.close()
+
+            # Save file to Cloud Storage
+            storage.upload_to_cloud_storage(filepath)
+
+            # Delete tmp file
+            delete_file(filename)
 
             # Get time delta in seconds
             end_time = time.time()
@@ -141,12 +156,37 @@ def save_and_get_text(files):
     text = "\n".join(text)
 
     # Create thumbnail of first image
-    thumbnail = create_thumbnail(first_filepath)
+    thumbnail = create_thumbnail(first_image)
+    first_image.close()
 
     # Save to mongo
     save_history(text, thumbnail, filenames)
 
     return text, times
+
+
+def get_image_encoded(filename):
+    """
+    Helper function do download image from cloud storage and return base64
+    :param filename:
+    :return:
+    """
+    # Download image from cloud storage
+    storage = GoogleCloudStorage()
+    filepath = storage.download_from_cloud_storage(filename)
+
+    # Open image
+    img = Image.open(filepath)
+
+    # Encode in base-64
+    encoded = encode_base64(img)
+
+    img.close()
+
+    # Delete downloaded temporary image
+    delete_file(filename)
+
+    return encoded
 
 
 def delete_expired_images():
@@ -160,6 +200,8 @@ def delete_expired_images():
     # Get expiration day
     days = int(app.config['SOURCE_IMAGE_LIFETIME'])
     expiration = isodate.datetime_isoformat(datetime.now() - timedelta(days=days))
+
+    storage = GoogleCloudStorage()
 
     # Get expired history
     history_list = History.get_expired(expiration)
@@ -176,5 +218,5 @@ def delete_expired_images():
         history.save()
 
     # Delete all files to delete
-    for image in files_to_delete:
-        delete_file(image)
+    for filename in files_to_delete:
+        storage.delete_from_cloud_storage(filename)

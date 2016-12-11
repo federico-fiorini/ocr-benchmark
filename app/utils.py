@@ -35,10 +35,17 @@ def get_filepath(filename):
     :return:
     """
     # Build filepath
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-    # Return None if it's not a file
-    return filepath if os.path.isfile(filepath) else None
+
+def get_filename(filepath):
+    """
+    Return filename
+    :param filepath:
+    :return:
+    """
+    # Get filename
+    return filepath.rsplit('/')[-1] if '/' in filepath else filepath
 
 
 def delete_file(filename):
@@ -48,46 +55,44 @@ def delete_file(filename):
     :return:
     """
     path = get_filepath(filename)
-    if path is not None:
+    if os.path.isfile(path):
         os.remove(path)
 
 
-def perform_ocr(img_path):
+def perform_ocr(img):
     """
     Performs OCR on image and returns text
-    :param img_path:
+    :param img:
     :return: Text found in the image
     """
     # Check file path
-    if img_path is None or img_path == "":
-        return None
+    if img is None:
+        return ""
 
     # Perform ocr and return result
-    img = Image.open(img_path).convert('L')
-    sharpness = ImageEnhance.Sharpness(img)
-    img = sharpness.enhance(2.0)
-    contrast = ImageEnhance.Contrast(img)
-    img = contrast.enhance(1.5)
+    # img = img.convert('L')
+    # sharpness = ImageEnhance.Sharpness(img)
+    # img = sharpness.enhance(2.0)
+    # contrast = ImageEnhance.Contrast(img)
+    # img = contrast.enhance(1.5)
     return pytesseract.image_to_string(img)
 
 
-def create_thumbnail(img_path):
+def create_thumbnail(img):
     """
     Create thumbnail and return base-64 encoded
-    :param img_path:
+    :param img:
     :return:
     """
     # Check file path
-    if img_path is None or img_path == "":
+    if img is None:
         return ""
 
     # Set thumbnail size
     size = 128, 128
 
     # Create thumbnail
-    img = Image.open(img_path)
     img.thumbnail(size)
-
     return encode_base64(img)
 
 

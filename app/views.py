@@ -1,8 +1,6 @@
 from app import app
-from logic import login_user, save_and_get_text, get_history
-from utils import get_filepath, encode_base64
+from logic import login_user, save_and_get_text, get_history, get_image_encoded
 from flask import request, session, redirect, url_for, render_template, jsonify, make_response, abort
-from PIL import Image
 
 SALT = app.config['SALT']
 
@@ -81,16 +79,12 @@ def image(filename):
     :param filename:
     :return:
     """
-    filepath = get_filepath(filename)
+    encoded_image = get_image_encoded(filename)
 
-    # If not found
-    if filepath is None:
+    if encoded_image is None:
         abort(404)
-    
-    img = Image.open(filepath)
 
-    # Encode in base-64
-    return encode_base64(img)
+    return encoded_image
 
 
 @app.route("/logout", methods=['GET'])

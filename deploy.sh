@@ -26,7 +26,7 @@ docker build -t gcr.io/$PROJECT_ID/backend:v1 .
 gcloud docker -- push gcr.io/$PROJECT_ID/backend:v1
 
 # Create container cluster
-gcloud container clusters create backend
+gcloud container clusters create backend --num-nodes=3
 gcloud container clusters get-credentials backend
 
 
@@ -43,6 +43,12 @@ make add-replica DISK_SIZE=200GB ZONE=europe-west1-b ENV=GoogleCloudPlatform
 
 printf "\n\nWaiting for mongo replica to elect master\n"
 sleep 10
+
+
+##### Create Cloud Storage bucket ######
+
+gsutil mb -p $PROJECT_ID -l EU gs://$PROJECT_ID/
+gsutil defacl set public-read gs://$PROJECT_ID
 
 ##### Run kubernetes service ######
 
