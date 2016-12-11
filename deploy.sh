@@ -53,7 +53,7 @@ gsutil defacl set public-read gs://$PROJECT_ID
 ##### Run kubernetes service ######
 
 # Create pod
-kubectl run backend --image=gcr.io/$PROJECT_ID/backend:v1 --port=$PORT
+kubectl run backend --image=gcr.io/$PROJECT_ID/backend:v1 --port=$PORT --replicas=5
 
 # Create service
 kubectl expose deployment backend --type="LoadBalancer"
