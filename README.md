@@ -1,6 +1,11 @@
 # ONLINE OCR
 
-Mobile friendly web app to perform OCR
+Mobile friendly web app to perform OCR.
+
+Uses Docker and Kubernetes to deploy a cluster with multiple nodes.
+Uses MongoDB replica set of 3 nodes with persistent disk.
+Uses Google Cloud Storage to save source images.
+
 
 ### INSTRUCTIONS
 To run it locally follow these steps:
