@@ -33,11 +33,12 @@ function benchmarkStop(name){
 var form_data;
 function doOcr(id){
     form_data = new FormData($('#'+id)[0]);
-    if(form_data.getAll("files").length == 0)
+    if (form_data.getAll("files").length == 0) {
         return;
-    else    
-        changeView("ocr");    
-    
+    } else {
+        changeView("ocr");
+    }
+
     mode = $('#mode option:selected').text();
     switch(mode){
         case "Local":
