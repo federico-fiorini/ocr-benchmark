@@ -10,9 +10,9 @@ VERSION="$1"
 
 # Make sure to have docker running
 CURR_PWD=${PWD}
-export GOOGLE_APPLICATION_CREDENTIALS="$CURR_PWD/credentials/mcc-2016-g14-p2-c10238f32707.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$CURR_PWD/credentials/google-cloud-auth.json"
 
-PROJECT_ID="mcc-2016-g14-p2"
+PROJECT_ID="ocr-benchmark"
 PORT=5000
 
 # Re-build docker image

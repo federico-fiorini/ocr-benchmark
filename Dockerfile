@@ -23,7 +23,7 @@ COPY . /app
 WORKDIR /app
 
 # Set google credentials env
-ENV GOOGLE_APPLICATION_CREDENTIALS /app/credentials/mcc-2016-g14-p2-c10238f32707.json
+ENV GOOGLE_APPLICATION_CREDENTIALS /app/credentials/google-cloud-auth.json
 
 RUN mkdir -p /images/
 

@@ -17,4 +17,4 @@ TEST_USERS = os.environ.get('TEST_USERS', 'users.json')
 
 SOURCE_IMAGE_LIFETIME = os.environ.get('SOURCE_IMAGE_LIFETIME', '7')
 
-GOOGLE_BUCKET_NAME = os.environ.get('GOOGLE_BUCKET_NAME', 'mcc-2016-g14-p2')
+GOOGLE_BUCKET_NAME = os.environ.get('GOOGLE_BUCKET_NAME', 'ocr-benchmark')

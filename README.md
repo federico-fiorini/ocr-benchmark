@@ -2,7 +2,11 @@
 
 Mobile friendly web app to perform OCR.
 
-Uses Docker and Kubernetes to deploy a cluster with multiple nodes.
+Local (client side) and Remote (server side) options are available.
+
+Benchmark option compares local and remote performances.
+
+Uses Docker and Kubernetes to deploy a cluster on Google Container Engine.
 Uses MongoDB replica set of 3 nodes with persistent disk.
 Uses Google Cloud Storage to save source images.
 
@@ -25,8 +29,8 @@ To run it locally follow these steps:
     apt-get install build-essential python python-dev python-pip python-virtualenv libjpeg-dev libffi-dev libssl-dev tesseract-ocr --assume-yes
     
     # Clone the code
-    git clone git@git.niksula.hut.fi:cs-e4100/mcc-2016-g14-p2.git
-    cd mcc-2016-g14-p2
+    git clone https://github.com/federico-fiorini/ocr-benchmark.git
+    cd ocr-benchmark
     
     # Install virtualenv
     pip install --upgrade pip virtualenv
@@ -47,6 +51,7 @@ To run it locally follow these steps:
     
     # Set env variables
     export UPLOAD_FOLDER="/tmp"
+    export GOOGLE_APPLICATION_CREDENTIALS="path/to/credentials/google-cloud-auth.json"
 
     # Run
     ./run.py

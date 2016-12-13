@@ -8,13 +8,13 @@ sudo service docker start
 
 # Ser variables
 CURR_PWD=${PWD}
-export GOOGLE_APPLICATION_CREDENTIALS="$CURR_PWD/credentials/mcc-2016-g14-p2-c10238f32707.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$CURR_PWD/credentials/google-cloud-auth.json"
 
-PROJECT_ID="mcc-2016-g14-p2"
+PROJECT_ID="ocr-benchmark"
 PORT=5000
 
 # Set gcloud config
-gcloud config set account "mcc.fall.2016.g14@gmail.com"
+gcloud config set account "account@gmail.com"
 gcloud config set compute/zone europe-west1-b
 gcloud config set project $PROJECT_ID
 
