@@ -5,14 +5,6 @@ from flask import request, session, redirect, url_for, render_template, jsonify,
 SALT = app.config['SALT']
 
 
-@app.before_request
-def before_request():
-    if request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-
-
 @app.route("/", methods=['GET', 'POST'])
 def login():
     

@@ -9,5 +9,4 @@ except IndexError:
 
 
 if __name__ == "__main__":
-    context = ('credentials/certificate.crt', 'credentials/private.key')
-    app.run(debug=True, host='0.0.0.0', port=port, ssl_context=context)
+    app.run(debug=True, host='0.0.0.0', port=port)
